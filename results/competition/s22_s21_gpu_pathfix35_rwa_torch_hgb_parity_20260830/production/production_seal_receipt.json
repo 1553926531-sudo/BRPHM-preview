@@ -1,0 +1,39 @@
+{
+  "schema": "competition-s22-s21-production-seal-receipt-1.0",
+  "status": "pass",
+  "sealed_at": "2026-08-30T07:48:57.275756+00:00",
+  "manifest": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/production/manifest.json",
+  "manifest_sha256": "47a2dc1f7027b4743aab68d8f0c8f4a7f21913bcb1a7b1aee9dbf06bb4d6560b",
+  "source_transfer_manifest": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/transfer/manifest.json",
+  "source_transfer_manifest_sha256": "b244680974a0bf0abeac0c06976f0649945721a5ec2adae6dd403b1c62820ae5",
+  "target_holdout_receipt": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/holdout/prediction_holdout_receipt.json",
+  "target_holdout_receipt_sha256": "405f77ab9db1f2b4838bf085d6847a2c738d27f03850b5a6bdd79c5afe4f8935",
+  "holdout_read_for_seal": true,
+  "gate": {
+    "bat": {
+      "rmse_max": 1.5708675425,
+      "mae_max": 0.990933918,
+      "unit": "cycle"
+    },
+    "rwa": {
+      "rmse_max": 0.01847260338,
+      "mae_max": 0.01405584741,
+      "unit": "day"
+    }
+  },
+  "gate_result": "pass",
+  "routes": {
+    "bat": {
+      "rmse": 1.565145748990264,
+      "mae": 0.9725061725827298,
+      "rul_unit": "cycle"
+    },
+    "rwa": {
+      "rmse": 0.018440836607000497,
+      "mae": 0.01404815682278399,
+      "rul_unit": "day"
+    }
+  },
+  "member_hashes_verified": true,
+  "old_receipts_overwritten": false
+}

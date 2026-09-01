@@ -1,0 +1,94 @@
+# configs/preprocess/rwa_target.yaml —— 0715-04「仿真→processed 打通」· 反作用轮目标域张量(W2/ALG-2)
+#
+# 日程原文(0715-04): 仿真→processed 打通 —— sim_loader 输出接 preprocess 同一管线(域=tgt);
+#                    产 {rwa,bat}_target_{train,val}.pt; 归一化统计量只用 tgt 训练集。
+#                    入: sim interim ➜ 出: data/processed/*_target_*.pt。
+#                    验收: 形状/无 NaN; 与公开数据张量张量结构完全同构。依据 白皮书 §2.2。
+# 规格来源(冲突以 docs/interfaces.md 为准; 本任务人读细则见 docs/interfaces_appendix_0715-04.md,
+#           抬头「人读文件、非规范、不作判据」——判据在本机读 YAML 与 .pt/norm_stats/splits 三件产物):
+#   §7.1  .pt 逐键契约: x[N,L,C] f32 / y_rul / y_hi / mask / meta; y_priv 可选**仅 domain=tgt**
+#         (推理 .pt 禁携带) —— 本卡 priv_channels=[] ⇒ 无 y_priv 键, 与公开张量结构完全同构;
+#   §7.2  RW 行: L=30 / stride=1 / **日聚合契约**(仅 rw_telemetry@t_unit=day): 0.1 Hz →
+#         整 bin 聚合派生列 `<通道>.<算子>`(speed/current/temp 各 mean,std,min,max=12) +
+#         `rw.fric_tc.mean`(current 减其对 temp 的线性基线, 基线系数**只在训练集拟合**,
+#         存 norm_stats.derived.rw.fric_tc.baseline_coef) ⇒ C=13;
+#   §7.4  norm_stats.computed_on.split=="train"(闸二); val/holdout 复用;
+#   §7.5  splits 五列; **仿真样本 strata=DOE 格点 ID**; domain=tgt;
+#   §8    封存集隔离: 命中 0715-03 holdout_manifest 的单元强制 split=holdout 且不读(零交集);
+#   附录 0715-04(本任务号编号, 不占字母 —— 照 0714-01 先例): 0715-04.3 逐 DOE 格点分层尾部法 +
+#         封存清单零交集 / 0715-04.4 daily_agg bin 参数化(§7.2 字面 30 天窗对 SIM_rwa 零窗口的
+#         机算证明 + bin_s=P/10 相位锁整轨裁决, **登记偏差**) / 0715-04.5 fric 基线融合工位闭式解 /
+#         0715-04.6 rul_floor=drop_negative(失效后尾巴窗剔除) / 0715-04.9 合册+分册双产出 /
+#         0715-04.10 与公开张量结构同构机器化 / 0715-04.11 Rmax 暂定锚与校准位。
+# 本文件与 preprocess.RWA_TARGET_DEFAULTS 逐字等价(门禁对锁, 照 f1_dev/bat_pretrain/rw_src1/rw_src2 先例)。
+# 运行(仓库根; 真机顺序 = 0714-01 sim_loader → 0715-03 make_holdout → 本管线):
+#   python -m src.datasets.preprocess --config configs/preprocess/rwa_target.yaml --workers auto
+
+schema_version: "1.0"
+task: rwa_target               # 产物命名种子: norm_stats/rwa_target.json / splits/rwa_target_split.csv
+dataset_id: SIM_rwa            # 单源(§6.7 SIM_rwa 卡, domain=tgt); data/interim/SIM_rwa/(§6.1 容器)
+unit_filter: null             # 全体在册 DOE 样本入池(SIM_dev 隔离区照 AG-4 永不进 processed; 六段文法硬拒 dev)
+
+channels:                     # §7.2 RW 行 C=13: 3 遥测 × {mean,std,min,max} + fric_tc.mean(顺序即 C 维序)
+  - rw.speed_rpm.mean         #   派生列由 daily_agg 从 base_channels 生成(拼写守门: 每列须 <base>.<op> 或 fric_tc.mean)
+  - rw.speed_rpm.std
+  - rw.speed_rpm.min
+  - rw.speed_rpm.max
+  - rw.motor_current_a.mean
+  - rw.motor_current_a.std
+  - rw.motor_current_a.min
+  - rw.motor_current_a.max
+  - rw.bearing_temp_c.mean
+  - rw.bearing_temp_c.std
+  - rw.bearing_temp_c.min
+  - rw.bearing_temp_c.max
+  - rw.fric_tc.mean           # 温度补偿摩擦特征(§7.2): = current.mean − (a + b·temp.mean)(线性恒等, 免二遍原始行)
+
+channels_policy: impute_mean  # AH2-5 同款: 单样本 bin 的 std=NaN(pandas ddof=1)由训练均值插补入账(不静默造 0)
+
+resample:
+  mode: daily_agg             # X2-8 契约(派生列/末行标签/闸二基线)原样; bin 参数化 = 0715-04.4
+  bin_s: 574.0                # 聚合 bin 宽(秒): = 轨道周期 P/10 = 5740/10 ⇒ 窗 L×bin = 30×574 = 17220 s
+                              #   = **恰 3 整轨**(相位锁定)。**登记偏差(0715-04.4)**: §7.2 字面「30 天窗」
+                              #   对 SIM_rwa 必然零窗口(sim/logs/manifest.csv 机算: 单元寿命 stop 42000–136480 s
+                              #   = 0.49–1.58 天 ≪ 30 天) ⇒ 取 P/10 作**暂定锚**; 可行性(机算): 17220 ≤ 计划
+                              #   最短失效前时段 (min stop 42000 − tail 3000)/margin 2.0 = 19500 s ⇒ 每台在册
+                              #   单元至少 1 个失效前窗。真机按 tgt train 分布校准回填(幂等), 回执附录 0715-04。
+                              #   (bin_s: 86400.0 即回到 §7.2「整日」字面零漂移 —— 通用腿保留该缺省。)
+  base_channels:              # daily_agg 基通道(§7.2 RW 三遥测; 派生列 = 每 base × {mean,std,min,max})
+    - rw.speed_rpm
+    - rw.motor_current_a
+    - rw.bearing_temp_c
+  fric_tc: true               # rw.fric_tc 基线(闸二: 只在 tgt 训练集拟合; 要求 base 含 current 与 temp)
+
+window:
+  L: 30                       # §7.2 RW 行字面: 窗 30(bin 计; bin=574 s ⇒ 3 整轨)
+  stride: 1                   # §7.2 RW 行字面: 步 1; 窗口不得跨 unit(windows.py 承载)
+
+labels:
+  rmax: 0.2                   # **暂定锚**(0715-04.11): ≤ 计划最短寿命 0.2257 天(manifest est_tf min; X2-9 同法
+                              #   的计划数版, t_unit=day)。真机按 docs/rwa_target_stats.md「训练集寿命分布」
+                              #   回填并重跑(幂等), 一行回执登记附录 0715-04。
+  H: 0                        # 预测视野: 目标域微调物料档取 0; H>0 时按 §7.1/§7.3 产 y_trend[N,H]+mask(已接线)
+  rul_floor: drop_negative    # 0715-04.6: 窗末 y_rul<0(失效后尾巴, stop=2·Tf+tail 的批产实况约半程)整窗剔除入账
+                              #   (keep = 既有四腿零漂移行为; 本目标腿取 drop_negative)
+
+split:
+  policy: cell_tail           # 0715-04.3: 逐 DOE 格点分层执行 X2-2 字面「排序取尾」法(AH2-3 逐源换逐格点)
+  val_frac: 0.2              # 每格点 n_val = clamp(⌊n·val_frac⌋, 1, n−1); n==1 ⇒ 全 train(格点级钳位下界)
+  seed: 0                    # §7.5 seed 列记账值 + sha256(seed:unit_id) 升序键(确定性, 与并行度无关)
+  holdout_manifest: data/holdout/holdout_manifest.csv  # 0715-03 封存产物(机读五列冻结: sample_id,product_line,
+                              #   doe_cell,seed,sha256); 缺件/空表硬拒指路 0715-03; 命中单元强制 holdout 不读(零交集闸)
+  manifest: data/processed/splits/rwa_target_split.csv  # §7.5 五列(strata=DOE 格点); 存在即只读 + 逐行对表
+
+priv_channels: []             # §7.1 y_priv 可选键(仅 domain=tgt): 缺省空 ⇒ 无 y_priv 键、与公开张量结构完全同构。
+                              #   置键(如 [rw.friction_torque_nm, rw.wear_volume_mm3])则须全为 privileged 可见性、
+                              #   与 channels 不相交, 产 y_priv[N,P] 窗末原值 + mask.y_priv + meta.priv_channels
+                              #   —— 为 T2b/0722-05 预埋; 0715-01 官方口径(特权信息可否训练)未决, 故默认关。
+
+out:
+  pt: data/processed/rwa_target.pt                  # 合册(train+val; 0714-06 finetune 单 .pt 双 split「改指」落点)
+  pt_train: data/processed/rwa_target_train.pt      # 日程字面产物(§7.1 <task>_<split>.pt; = 合册按 split 精确切片)
+  pt_val: data/processed/rwa_target_val.pt          # 日程字面产物(切片一致性断言: 分册并回合册逐位一致)
+  norm_stats: data/processed/norm_stats/rwa_target.json  # §7.4 逐键; computed_on.split=train(闸二); derived 存基线系数
+  stats_doc: docs/rwa_target_stats.md               # 逐格点分账/覆盖/基线/Rmax 校准位(**人读回执, 输出非判据**)

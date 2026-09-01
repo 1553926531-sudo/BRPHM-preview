@@ -1,0 +1,84 @@
+/* ============================================================================
+   dashboard/assets/tokens.css —— 设计令牌(唯一真源 · B 方案预留 0709)
+   规则: 画布内一切颜色/字号/间距/动效只准引用本文件变量, 禁止硬编码。
+   改观感 = 改这里; 组件结构不动。0715-07 的正式阈值只改 payload.config,
+   颜色语义(ok/warn/alert)仍从这里取。
+
+   ── 0713-08 观感升级(仅样式层 C5-1, 门禁不校验样式值; 变量名全兼容旧引用)──
+     · 底色栈注入极淡蓝紫辉差 + 分层高光/阴影令牌 → 玻璃质感与"精密仪表"纵深;
+     · 辉光由"霓虹光晕"收敛为"仪表冷光"(更紧、更贵);
+     · 新增遥测第 4 通道色 --ch-4(精档 §6.5 每产品线 4 路, 引擎同步扩到 4 色);
+     · 新增缓动族(标准/减速/回弹)+ 面板渐变/描边渐变令牌, 供编排式入场与游标动效。
+   ========================================================================== */
+:root{
+  /* ---- 底色栈(近黑蓝, 自上而下由深到浅; 极淡蓝紫辉差营造纵深) ---- */
+  --bg-0:#03060c;                    /* 页面基底 */
+  --bg-1:#060a12;                    /* 画布底 */
+  --bg-2:#0b1220;                    /* 组件内衬 */
+  --bg-3:#0f1830;                    /* 悬起/高亮内衬 */
+  --panel:rgba(13,21,37,.60);        /* 玻璃面板 */
+  --panel-hi:rgba(19,30,52,.90);     /* 激活面板 */
+  --panel-sheen:linear-gradient(180deg,rgba(148,178,228,.055),rgba(148,178,228,0) 42%);
+  --line:rgba(150,180,230,.12);      /* 发丝描边 */
+  --line-hi:rgba(150,180,230,.30);
+  --line-grad:linear-gradient(180deg,rgba(150,180,230,.34),rgba(150,180,230,.06));
+
+  /* ---- 数据墨(文字) ---- */
+  --ink-0:#eef4ff;                   /* 主读数 */
+  --ink-1:#aab9d7;                   /* 次级 */
+  --ink-2:#5f6f8d;                   /* 弱化/标签 */
+
+  /* ---- 语义色(冷科技青为常态, 琥珀=关注, 红=预警, 绿=良好) ---- */
+  --acc:#35e0ff;   --acc-2:#5cc6ff;  --acc-dim:rgba(53,224,255,.15);
+  --ok:#2ee59d;    --ok-dim:rgba(46,229,157,.13);
+  --warn:#ffb454;  --warn-dim:rgba(255,180,84,.15);
+  --alert:#ff5f66; --alert-dim:rgba(255,95,102,.15);
+  --accent-grad:linear-gradient(135deg,#4fe8ff,#35e0ff 45%,#7ab8ff);
+
+  /* ---- 遥测通道配色(按通道序取; 精档 §6.5 每产品线 4 路 → 4 色环上均分) ---- */
+  --ch-1:#35e0ff;  /* cyan   */
+  --ch-2:#a78bfa;  /* violet */
+  --ch-3:#fbbf24;  /* amber  */
+  --ch-4:#fb7da3;  /* rose   */
+
+  /* ---- 辉光(收敛为精密冷光: 更紧的芯 + 更薄的晕) ---- */
+  --glow-acc:0 0 12px rgba(53,224,255,.34);
+  --glow-ok:0 0 11px rgba(46,229,157,.42);
+  --glow-warn:0 0 11px rgba(255,180,84,.46);
+  --glow-alert:0 0 12px rgba(255,95,102,.5);
+  --glow-text:0 0 16px rgba(53,224,255,.26);
+
+  /* ---- 分层阴影/高光(玻璃纵深: 外投影 + 内顶高光 + 内描边) ---- */
+  --sh-1:0 1px 2px rgba(0,0,0,.4);
+  --sh-2:0 6px 20px rgba(0,0,0,.42),0 1px 0 rgba(148,178,228,.06) inset;
+  --sh-3:0 18px 48px rgba(0,0,0,.5),0 1px 0 rgba(148,178,228,.09) inset;
+  --sh-glow-acc:0 0 0 1px rgba(53,224,255,.4),0 8px 30px rgba(53,224,255,.16),
+               0 1px 0 rgba(148,178,228,.1) inset;
+  --hair-top:linear-gradient(90deg,transparent,rgba(150,180,230,.28),transparent);
+
+  /* ---- 字体(系统栈国内直出; 落 WOFF2 到 assets/fonts/ 自动升级, 见 fonts/README) ---- */
+  --font-ui:"RSUI","Inter","SF Pro Display","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  --font-mono:"RSMono","JetBrains Mono","Cascadia Code","SF Mono","Roboto Mono","Consolas",monospace;
+
+  /* ---- 字阶 ---- */
+  --fs-hero:clamp(46px,4.6vw,68px);  /* RUL 倒计时 */
+  --fs-num:26px;                     /* 仪表读数 */
+  --fs-body:13px;
+  --fs-cap:11px;                     /* 标签/小注 */
+  --fs-micro:9.5px;                  /* 极小注 */
+  --ls-cap:.14em;                    /* 小注字距 */
+
+  /* ---- 几何 ---- */
+  --rad:12px; --rad-lg:16px; --rad-sm:8px;
+  --gap:14px; --pad:16px; --hair:1px;
+
+  /* ---- 动效(Apple 式标准缓动族) ---- */
+  --t-fast:130ms; --t-med:280ms; --t-slow:600ms; --t-reveal:820ms;
+  --ease:cubic-bezier(.22,.61,.2,1);          /* 标准 */
+  --ease-out:cubic-bezier(.16,1,.3,1);        /* 强减速(入场) */
+  --ease-spring:cubic-bezier(.34,1.56,.64,1); /* 轻回弹 */
+}
+
+@media (prefers-reduced-motion:reduce){
+  :root{ --t-fast:0ms; --t-med:0ms; --t-slow:0ms; --t-reveal:0ms; }
+}

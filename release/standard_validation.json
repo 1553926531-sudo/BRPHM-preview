@@ -1,0 +1,24 @@
+{
+  "schema": "brphm-standard-validation-1.0",
+  "status": "verified",
+  "data_tier": "BRPHM_RUL_standard",
+  "data_source": "https://www.modelscope.cn/datasets/modelscope1553926531/BRPHM-datasets",
+  "data_commit": "8d1cdd9f2da420f6c2a1c21f466ccfe9e4f6d561",
+  "data_files": 1151,
+  "data_bytes": 997506805,
+  "execution": {
+    "host": "Rack-Server",
+    "framework": "pytorch",
+    "device": "cpu",
+    "implementation_sha256": "b4a73ae8bc58c68bbf56e696f7fdb855db8c78024e0532710854da26fefebe32",
+    "config_sha256": "0827b6d60c9662032a97c873e1537a30984ac372b437173b13e749b32368d29"
+  },
+  "results": {
+    "bat": {"rmse": 0.8638846860443442, "mae": 0.548027309234892, "unit": "cycle", "windows": 1317},
+    "rwa": {"rmse": 0.018357195006873505, "mae": 0.013410799917036054, "unit": "day", "windows": 2167}
+  },
+  "limitations": [
+    "These are standard-tier validation results, not target holdout or complete-tier scores.",
+    "The selected production weights are the separately verified historical best target-holdout models documented in historical_best.json."
+  ]
+}

@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+outputs/
+results/prediction/
+results/reproduction/
+*.log
+*.tmp

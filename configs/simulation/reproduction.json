@@ -1,0 +1,16 @@
+{
+  "schema": "brphm-simulation-reproduction-1.0",
+  "dataset_root_layout": {
+    "raw_battery": "raw/sim/bat/*.mat",
+    "raw_reaction_wheel": "raw/sim/rwa/*.mat",
+    "loader": "processing/source_snapshot/src/datasets/sim_loader.py",
+    "dictionary": "processing/source_snapshot/configs/sim/data_dictionary.json"
+  },
+  "entrypoint": "python scripts/reconstruct_simulation.py --dataset-root <tier-root> --component both --verify",
+  "outputs": {
+    "battery": "interim/SIM_bat/unit_*.parquet + meta.json",
+    "reaction_wheel": "interim/SIM_rwa/unit_*.parquet + meta.json"
+  },
+  "external_dependency": "MATLAB/GMAT-produced simout .mat files are inputs; the simulator binary and licenses are not redistributed.",
+  "determinism": "Use --workers 1 for byte-stable reconstruction; the loader records source and configuration hashes."
+}

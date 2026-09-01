@@ -1,0 +1,59 @@
+{
+  "schema": "competition-s22-s21-receipt-1.0",
+  "stage": "prediction",
+  "status": "pass",
+  "created_at": "2026-08-30T04:27:14.572424+00:00",
+  "framework": {
+    "name": "pytorch",
+    "version": "2.3.1+cu121"
+  },
+  "manifest": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/transfer/manifest.json",
+  "manifest_sha256": "b244680974a0bf0abeac0c06976f0649945721a5ec2adae6dd403b1c62820ae5",
+  "split": "holdout",
+  "holdout_read": true,
+  "input_origin": "registered_holdout",
+  "lines": {
+    "bat": {
+      "route_id": "S22",
+      "model_label": "电池部件剩余寿命预测模型（储能系统）",
+      "input": "sealed_holdout_materialized_from_frozen_manifest",
+      "input_sha256": "d9e0847e7be457b9d5d5d39011f836cdb41e98b1e6558e04270023f652a374da",
+      "input_sha256_kind": "materialized_payload_sha256",
+      "payload_sha256": "d9e0847e7be457b9d5d5d39011f836cdb41e98b1e6558e04270023f652a374da",
+      "predictions": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/holdout/bat_holdout_predictions.csv",
+      "predictions_sha256": "87cc0fc29c356bfda47be079edc192040f47d7fa52144914246cf695ca57e7b2",
+      "n_windows": 732,
+      "rul_unit": "cycle",
+      "metrics": {
+        "rmse": 1.565145748990264,
+        "mae": 0.9725061725827298,
+        "bias": 0.04652191163088409,
+        "unit_macro_rmse": 1.1963731602982264,
+        "rul_upward_fraction": 0.0,
+        "n_windows": 732,
+        "n_units": 38
+      }
+    },
+    "rwa": {
+      "route_id": "S21",
+      "model_label": "反作用轮部件剩余寿命预测模型（姿态控制执行器）",
+      "input": "sealed_holdout_materialized_from_frozen_manifest",
+      "input_sha256": "3116db26a31d76183c01e4368b077f770f87b653d42545d4a5dd3f7cd2b48d7e",
+      "input_sha256_kind": "materialized_payload_sha256",
+      "payload_sha256": "3116db26a31d76183c01e4368b077f770f87b653d42545d4a5dd3f7cd2b48d7e",
+      "predictions": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/holdout/rwa_holdout_predictions.csv",
+      "predictions_sha256": "26b6f7fe6f151270940c7bde057af0f0b269df91a89d310fe32381568a114ded",
+      "n_windows": 1260,
+      "rul_unit": "day",
+      "metrics": {
+        "rmse": 0.018440836607000497,
+        "mae": 0.01404815682278399,
+        "bias": -0.0003732233864646935,
+        "unit_macro_rmse": 0.015025527100850308,
+        "rul_upward_fraction": 0.0,
+        "n_windows": 1260,
+        "n_units": 42
+      }
+    }
+  }
+}

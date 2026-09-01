@@ -1,0 +1,15 @@
+{
+  "schema": "dashboard-policy-1.0",
+  "hi_zones": [
+    {"min": 0.0, "max": 0.6, "status": "nominal", "label": "正常"},
+    {"min": 0.6, "max": 0.85, "status": "caution", "label": "关注"},
+    {"min": 0.85, "max": 1.5, "status": "critical", "label": "预警"}
+  ],
+  "maintenance_margin": {
+    "bat": {"value": 15.0, "unit": "cycles"},
+    "rw": {"value": 0.03, "unit": "days"}
+  },
+  "display_points": 420,
+  "playback_seconds": 24,
+  "policy_note": "HI 分区与维护安全裕量是可配置的演示运行策略，不替代数据集失效判据。"
+}

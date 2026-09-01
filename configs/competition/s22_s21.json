@@ -1,0 +1,119 @@
+{
+  "schema": "competition-s22-s21-config-1.0",
+  "framework": "pytorch",
+  "data_root": "paper/ieee_bilingual/reproduction/holdout_plan_b",
+  "purpose": "电池部件与反作用轮部件的 PyTorch 竞赛生产模型",
+  "holdout_policy": "never read during public pretraining or target transfer; prediction only",
+  "lines": {
+    "bat": {
+      "route_id": "S22",
+      "model_label": "电池部件剩余寿命预测模型（储能系统）",
+      "framework": "pytorch",
+      "public_task": "bat",
+      "target_task": "bat_target",
+      "public_tensor": "data/processed/bat_pretrain.pt",
+      "target_train_tensor": "data/processed/bat_target_train.pt",
+      "target_val_tensor": "data/processed/bat_target_val.pt",
+      "target_norm": "data/processed/norm_stats/bat_target.json",
+      "target_preprocess": "configs/preprocess/bat_target.yaml",
+      "rul_unit": "cycle",
+      "seeds": [17, 42, 73],
+      "selection_aggregation": "median3",
+      "production_point_aggregation": "median3",
+      "production_point_seed": null,
+      "interval_member_seeds": [17, 42, 73],
+      "production_refit_epoch": 169,
+      "segmentation": {
+        "age_field": "t_end",
+        "threshold": 139.0,
+        "low_target_weight": 0.2,
+        "high_target_weight": 0.7
+      },
+      "postprocess": "isotonic_nonincreasing",
+      "pretrain": {
+        "hidden": [128, 64],
+        "dropout": 0.05,
+        "epochs": 12,
+        "max_samples": null,
+        "batch_size": 512,
+        "learning_rate": 0.001,
+        "weight_decay": 0.001
+      },
+      "transfer": {
+        "direct_hidden": [64, 32],
+        "shared_aux_weight": 0.05,
+        "shared_output_weight": 0.0,
+        "dropout": 0.05,
+        "epochs": 300,
+        "patience": 20,
+        "batch_size": 256,
+        "learning_rate": 0.001,
+        "weight_decay": 0.001
+      },
+      "tree_expert": {
+        "feature": "channel_statistics_v1",
+        "n_trees": 800,
+        "max_leaf_nodes": 31,
+        "max_bins": 255,
+        "min_samples_leaf": 5,
+        "learning_rate": 0.03,
+        "l2_leaf": 0.005
+      }
+    },
+    "rwa": {
+      "route_id": "S21",
+      "model_label": "反作用轮部件剩余寿命预测模型（姿态控制执行器）",
+      "framework": "pytorch",
+      "public_task": "rw_src1",
+      "target_task": "rwa_target",
+      "public_tensor": "data/processed/rw_pretrain_src1.pt",
+      "target_train_tensor": "data/processed/rwa_target_train.pt",
+      "target_val_tensor": "data/processed/rwa_target_val.pt",
+      "target_norm": "data/processed/norm_stats/rwa_target.json",
+      "target_preprocess": "configs/preprocess/rwa_target.yaml",
+      "rul_unit": "day",
+      "seeds": [17, 42, 73],
+      "selection_aggregation": "median3",
+      "production_point_aggregation": "median3",
+      "production_point_seed": null,
+      "interval_member_seeds": [17, 42, 73],
+      "production_refit_epoch": 61,
+      "segmentation": {
+        "age_field": "t_end",
+        "threshold": 0.25243055555555555,
+        "low_target_weight": 0.7,
+        "high_target_weight": 1.0
+      },
+      "postprocess": "isotonic_nonincreasing",
+      "pretrain": {
+        "hidden": [128, 64],
+        "dropout": 0.1,
+        "epochs": 8,
+        "max_samples": 40000,
+        "batch_size": 1024,
+        "learning_rate": 0.0005,
+        "weight_decay": 0.001
+      },
+      "transfer": {
+        "direct_hidden": [128, 64],
+        "shared_aux_weight": 0.05,
+        "shared_output_weight": 0.0,
+        "dropout": 0.1,
+        "epochs": 300,
+        "patience": 20,
+        "batch_size": 256,
+        "learning_rate": 0.0005,
+        "weight_decay": 0.001
+      },
+      "tree_expert": {
+        "feature": "flat_window",
+        "n_trees": 800,
+        "max_leaf_nodes": 63,
+        "max_bins": 255,
+        "min_samples_leaf": 20,
+        "learning_rate": 0.03,
+        "l2_leaf": 0.001
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "brphm-public-dataset-versions-1.0",
+  "repository": "https://www.modelscope.cn/datasets/modelscope1553926531/BRPHM-datasets.git",
+  "verified_repository_commit": "85ebba12f3ec132dc9e0ea8ae49012f57505ccf1",
+  "verification_method": "Each tier is checked against its MANIFEST.json by file path, SHA-256, file count, and total bytes.",
+  "repository_manifest_sha256": "0f8d21b05eb0168ad36a070e1beb22421c962fcbbb46f65ff6cc6bba9bc3d697",
+  "tiers": [
+    {
+      "name": "BRPHM_RUL_mini",
+      "tier_manifest_sha256": "151f9e9ae0b1344f75a12d8c8538525c6853409c15fc3082059bf72387d8fb46",
+      "file_count": 8,
+      "total_bytes": 3112496,
+      "purpose": "format and minimal workflow acceptance"
+    },
+    {
+      "name": "BRPHM_RUL_standard",
+      "tier_manifest_sha256": "c4e0806bcc6c62370f9c53d15f62a87080e8949099188ea4c87dc1c482c0546f",
+      "file_count": 1151,
+      "total_bytes": 997506805,
+      "purpose": "public reproduction and simulation-record reconstruction"
+    },
+    {
+      "name": "BRPHM_RUL_complete",
+      "tier_manifest_sha256": "ba3aae4d5de48d9b1e1fcd78de219230bbf26cf3abb84f3d147a462f0bfe3062",
+      "file_count": 67539,
+      "total_bytes": 107243597734,
+      "purpose": "complete data reproduction"
+    }
+  ]
+}

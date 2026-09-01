@@ -1,0 +1,59 @@
+{
+  "schema": "competition-s22-s21-receipt-1.0",
+  "stage": "prediction",
+  "status": "pass",
+  "created_at": "2026-08-30T04:26:35.656292+00:00",
+  "framework": {
+    "name": "pytorch",
+    "version": "2.3.1+cu121"
+  },
+  "manifest": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/transfer/manifest.json",
+  "manifest_sha256": "b244680974a0bf0abeac0c06976f0649945721a5ec2adae6dd403b1c62820ae5",
+  "split": "validation",
+  "holdout_read": false,
+  "input_origin": "registered_validation",
+  "lines": {
+    "bat": {
+      "route_id": "S22",
+      "model_label": "电池部件剩余寿命预测模型（储能系统）",
+      "input": "/mnt/data/BRPHM/rul-space/data/processed/bat_target_val.pt",
+      "input_sha256": "88f5f07abe45f7d8dcd198480d2669b5c40373c0fd050c7582a7fde37c5d202a",
+      "input_sha256_kind": "file_sha256",
+      "payload_sha256": "6f151c33476a210660114d5f14cc6c01cd09653b60cd0cdbe0ccf4749e90918f",
+      "predictions": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/validation/bat_validation_predictions.csv",
+      "predictions_sha256": "bd9fdd19abd708f5222ddca295e18276ff62bbe3f0d09c659d66f69a9c4d3cd0",
+      "n_windows": 1317,
+      "rul_unit": "cycle",
+      "metrics": {
+        "rmse": 0.8638845232603312,
+        "mae": 0.5480271310849757,
+        "bias": 0.15991929970653734,
+        "unit_macro_rmse": 0.5663967377824634,
+        "rul_upward_fraction": 0.0,
+        "n_windows": 1317,
+        "n_units": 57
+      }
+    },
+    "rwa": {
+      "route_id": "S21",
+      "model_label": "反作用轮部件剩余寿命预测模型（姿态控制执行器）",
+      "input": "/mnt/data/BRPHM/rul-space/data/processed/rwa_target_val.pt",
+      "input_sha256": "59b0000fe1111cf3174e1ff5c2b94005e49931f450c024919c5604dd29a0561a",
+      "input_sha256_kind": "file_sha256",
+      "payload_sha256": "d68ce3168b060a4968c0b30047b708e2adcea3b2ff8334f1c1cca1aba7ea91aa",
+      "predictions": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/validation/rwa_validation_predictions.csv",
+      "predictions_sha256": "5d871315082dcddde76c81da9f4391a58c3353b834cb7ee64fd5e898cafe93c8",
+      "n_windows": 2167,
+      "rul_unit": "day",
+      "metrics": {
+        "rmse": 0.018357195301765442,
+        "mae": 0.013410800014423086,
+        "bias": 0.002198309366744275,
+        "unit_macro_rmse": 0.014681080370376642,
+        "rul_upward_fraction": 0.0,
+        "n_windows": 2167,
+        "n_units": 71
+      }
+    }
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "schema": "competition-s22-s21-receipt-1.0",
+  "stage": "public_pretrain",
+  "status": "pass",
+  "created_at": "2026-08-30T04:07:57.077365+00:00",
+  "framework": {
+    "name": "pytorch",
+    "version": "2.3.1+cu121"
+  },
+  "config": "configs/competition/s22_s21.json",
+  "config_sha256": "0827b6d60c9662032a97c873e1537a30984ac372b437173b13e749b32368d29d",
+  "implementation": "src/competition_s22_s21.py",
+  "implementation_sha256": "a0c20be5ecdf33075705941fed48a57ce2cdd659ad5d6b4502a11a6faf92a0cd",
+  "holdout_read": false,
+  "lines": {
+    "bat": {
+      "route_id": "S22",
+      "source_tensor": "/mnt/data/BRPHM/rul-space/data/processed/bat_pretrain.pt",
+      "source_sha256": "61b12e186a99ff1a8701c7e20d79e6381b870e1eb42ab352b81351281487971d",
+      "source_payload_sha256": "bc70856729f0a91ae9cb4b85038f1d76f2e9974c3cfbc0e5bb5a1e3d0de6a6f2",
+      "feature_contract": {
+        "schema": "competition-channel-statistics-age-1.0",
+        "window_length": 60,
+        "channels": [
+          "bat.capacity_ah",
+          "bat.ir_proxy_ohm",
+          "bat.temp_mean_c",
+          "bat.charge_time_s"
+        ],
+        "statistics": [
+          "last",
+          "first",
+          "delta",
+          "mean",
+          "std",
+          "min",
+          "max",
+          "q25",
+          "q50",
+          "q75",
+          "slope",
+          "tail_mean",
+          "head_mean"
+        ],
+        "flatten_order": "statistic_then_channel_then_age",
+        "age_features": [
+          "age_ratio",
+          "age_ratio_squared",
+          "age_ratio_sqrt"
+        ],
+        "age_scale": 1080.0,
+        "direct_dimension": 55,
+        "invariant_reducers": [
+          "mean",
+          "std",
+          "min",
+          "max"
+        ],
+        "invariant_dimension": 55
+      },
+      "members": [
+        {
+          "seed": 17,
+          "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/pretrain/bat/public_pretrain_bat_s17.pt",
+          "sha256": "6c4d5eaafaa3f62d8eac9dc9314d6cc79fd886a0f77439f9ec8adf28bfcc93b7",
+          "final_smooth_l1": 0.008769871302132907
+        },
+        {
+          "seed": 42,
+          "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/pretrain/bat/public_pretrain_bat_s42.pt",
+          "sha256": "d4325e4d3d963c6e8135747e4150c0effbdfac242629b23ded2892c49a4d3a8c",
+          "final_smooth_l1": 0.008292760941471817
+        },
+        {
+          "seed": 73,
+          "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/pretrain/bat/public_pretrain_bat_s73.pt",
+          "sha256": "10a4ce4da897bf97169d0e34cbe42fd13dafd2f894e94a093e2e01eb8bce182b",
+          "final_smooth_l1": 0.008805055219137723
+        }
+      ]
+    },
+    "rwa": {
+      "route_id": "S21",
+      "source_tensor": "/mnt/data/BRPHM/rul-space/data/processed/rw_pretrain_src1.pt",
+      "source_sha256": "0cb567eb34686cdfaec21ab61f86d055b5bb1fbb3c0a408be7e6ddc6a9e2bcd2",
+      "source_payload_sha256": "344ad7ba722becfcd89ccce0a81cf91df4ae81b0bca11ee0dd383db2f1bada23",
+      "feature_contract": {
+        "schema": "competition-channel-statistics-age-1.0",
+        "window_length": 30,
+        "channels": [
+          "tf.op1",
+          "tf.op2",
+          "tf.op3",
+          "tf.s01",
+          "tf.s02",
+          "tf.s03",
+          "tf.s04",
+          "tf.s05",
+          "tf.s06",
+          "tf.s07",
+          "tf.s08",
+          "tf.s09",
+          "tf.s10",
+          "tf.s11",
+          "tf.s12",
+          "tf.s13",
+          "tf.s14",
+          "tf.s15",
+          "tf.s16",
+          "tf.s17",
+          "tf.s18",
+          "tf.s19",
+          "tf.s20",
+          "tf.s21"
+        ],
+        "statistics": [
+          "last",
+          "first",
+          "delta",
+          "mean",
+          "std",
+          "min",
+          "max",
+          "q25",
+          "q50",
+          "q75",
+          "slope",
+          "tail_mean",
+          "head_mean"
+        ],
+        "flatten_order": "statistic_then_channel_then_age",
+        "age_features": [
+          "age_ratio",
+          "age_ratio_squared",
+          "age_ratio_sqrt"
+        ],
+        "age_scale": 543.0,
+        "direct_dimension": 315,
+        "invariant_reducers": [
+          "mean",
+          "std",
+          "min",
+          "max"
+        ],
+        "invariant_dimension": 55
+      },
+      "members": [
+        {
+          "seed": 17,
+          "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/pretrain/rwa/public_pretrain_rwa_s17.pt",
+          "sha256": "20e4183ce701f704495952de0bc1410d86c1924ff8f918d493ecfcb56c0bf053",
+          "final_smooth_l1": 0.025519168794155122
+        },
+        {
+          "seed": 42,
+          "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/pretrain/rwa/public_pretrain_rwa_s42.pt",
+          "sha256": "4e65a1b189a28cbfb8a4bf09dd5859ac942d2f9dd954ddbedba06e44fe24bafd",
+          "final_smooth_l1": 0.025150543808937074
+        },
+        {
+          "seed": 73,
+          "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/pretrain/rwa/public_pretrain_rwa_s73.pt",
+          "sha256": "904886405f529692f0bb8318556ed61812c8829925334df16c2cb9a62d77b5ae",
+          "final_smooth_l1": 0.02477179819047451
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "task": "rwa_target",
+  "computed_on": {
+    "split": "train",
+    "dataset_ids": [
+      "SIM_rwa"
+    ],
+    "n_windows": 4884,
+    "split_manifest": "data/processed/splits/rwa_target_split.csv"
+  },
+  "channels": {
+    "rw.speed_rpm.mean": {
+      "mean": 2402.6639605323285,
+      "std": 800.8212785479819
+    },
+    "rw.speed_rpm.std": {
+      "mean": 192.02747618655772,
+      "std": 236.45652799012407
+    },
+    "rw.speed_rpm.min": {
+      "mean": 2159.8075735763045,
+      "std": 916.3844536804204
+    },
+    "rw.speed_rpm.max": {
+      "mean": 2639.118364131424,
+      "std": 775.1386868706107
+    },
+    "rw.motor_current_a.mean": {
+      "mean": 1.051974063022939,
+      "std": 0.40166680716643643
+    },
+    "rw.motor_current_a.std": {
+      "mean": 0.10386172544546349,
+      "std": 0.1019175262610388
+    },
+    "rw.motor_current_a.min": {
+      "mean": 0.8551388146979834,
+      "std": 0.45730737151685286
+    },
+    "rw.motor_current_a.max": {
+      "mean": 1.2449121098363332,
+      "std": 0.4089019630495626
+    },
+    "rw.bearing_temp_c.mean": {
+      "mean": 54.43631492489076,
+      "std": 20.376195870642928
+    },
+    "rw.bearing_temp_c.std": {
+      "mean": 1.6603015842385866,
+      "std": 1.3572032115354686
+    },
+    "rw.bearing_temp_c.min": {
+      "mean": 51.668774006155054,
+      "std": 20.376132689716517
+    },
+    "rw.bearing_temp_c.max": {
+      "mean": 57.174815360758785,
+      "std": 20.479295843694135
+    },
+    "rw.fric_tc.mean": {
+      "mean": 0.0004302302663639608,
+      "std": 0.20178019181892126
+    }
+  },
+  "derived": {
+    "rw": {
+      "fric_tc": {
+        "baseline_coef": [
+          0.1333878052760591,
+          0.01686660878399565
+        ],
+        "degenerate": false
+      }
+    }
+  },
+  "rmax": 0.2,
+  "created_utc": "2026-07-17T17:40:47Z"
+}

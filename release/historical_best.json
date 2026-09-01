@@ -1,0 +1,36 @@
+{
+  "schema": "brphm-historical-best-models-1.0",
+  "status": "verified_historical_selection",
+  "source_project": "/mnt/data1/BRPHM/rul-space/.competition_s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830",
+  "implementation": "src/competition_s22_s21.py",
+  "implementation_sha256": "91cdac9538c621cb4f070c7b13f09bd30efcbf010bebcd1cf904edf5e96bf5cc",
+  "historical_model_implementation_sha256": "a0c20be5ecdf33075705941fed48a57ce2cdd659ad5d6b4502a11a6faf92a0cd",
+  "config": "configs/competition/s22_s21.json",
+  "config_sha256": "0827b6d60c9662032a97c873e1537a30984ac372b437173b13e749b32368d29d",
+  "production_manifest": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/production/manifest.json",
+  "production_manifest_sha256": "cb7628d6dd487559cd8aec230fe497d882956e1c84556ae2c752c54393d422f3",
+  "selection_basis": "historical target-holdout RMSE first, with the two components selected independently",
+  "bat": {
+    "route": "S22",
+    "target_holdout": {"rmse": 1.565145748990264, "mae": 0.9725061725827298, "unit": "cycle"},
+    "members": [
+      {"seed": 17, "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/transfer/bat/s22_bat_s17.pt", "sha256": "9ac255e102ab666916a053dbf0faca1942d3ee3e4abe16c6340c96e676138627"},
+      {"seed": 42, "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/transfer/bat/s22_bat_s42.pt", "sha256": "b207ab54f847beafb3917ba12663ca25e6d2f6300041fe64988b091f6a5dceb2"},
+      {"seed": 73, "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/transfer/bat/s22_bat_s73.pt", "sha256": "50c5615a7e9d3a808be28347922bc2896345aa54113996e4530ac49ebf48690d"}
+    ]
+  },
+  "rwa": {
+    "route": "S21",
+    "target_holdout": {"rmse": 0.018440836607000497, "mae": 0.01404815682278399, "unit": "day"},
+    "members": [
+      {"seed": 17, "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/transfer/rwa/s21_rwa_s17.pt", "sha256": "ec2042eec2706c06723fe07c4a2fbd1fba08fd9ef9b7ac41d91d18f8168f0c1b"},
+      {"seed": 42, "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/transfer/rwa/s21_rwa_s42.pt", "sha256": "4179400d87e769cbb57dd632ae36c6039dc705ee415f15814cc44b91fb83fb9a"},
+      {"seed": 73, "path": "results/competition/s22_s21_gpu_pathfix35_rwa_torch_hgb_parity_20260830/transfer/rwa/s21_rwa_s73.pt", "sha256": "36ce12f8b3a604c380494e3352c5f1dc1fdee0b4bd759fabae9e3610fbb4e3b8"}
+    ]
+  },
+  "limits": [
+    "The reported scores document the historical independent evaluation used to select the default model combination; the organizer's unified assessment will provide the final evaluation under the actual task.",
+    "The public data tiers and their integrity records are listed in data/dataset_versions.json.",
+    "Docker image construction and Intel macOS execution still require their own fresh verification."
+  ]
+}

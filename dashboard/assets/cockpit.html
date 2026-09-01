@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#05080b">
+  <title>BRPHM · 航天器关键部件寿命预测与任务仿真平台</title>
+  <style>__STYLES__</style>
+</head>
+<body>
+  <!-- Visual direction: a calibrated mission logbook. Factual results are the focal point; motion only exposes state, lineage, and direct manipulation. -->
+  <svg class="svg-sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-command" viewBox="0 0 24 24"><path d="M18 9a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3Z"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 21h16"/></symbol>
+    <symbol id="i-download-arrow" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5"/></symbol>
+    <symbol id="i-download-tray" viewBox="0 0 24 24"><path d="M4 21h16"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 5h16M7 12h10M10 19h4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-orbit" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 4.6c2 2-1.4 8.7-7.5 14.8S-.9 22.9 3.1 18.9 11.8 1.4 18 2.6M4.6 4.6c-2 2 1.4 8.7 7.5 14.8s12.8 3.5 8.8-.5S12.2 1.4 6 2.6"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66L20 9"/><path d="M20 4v5h-5"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></symbol>
+    <symbol id="i-satellite" viewBox="0 0 24 24"><path d="m13 7 4-4 4 4-4 4M3 17l4-4 4 4-4 4M9 9l6 6M5 3l16 16M3 5l4-2 2 4-4 2M15 17l4-2 2 4-4 2"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-3 8-10V5l-8-3-8 3v7c0 7 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h7M15 6h5M4 12h2M10 12h10M4 18h10M18 18h2"/><circle cx="13" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="18" r="2"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9h6v6H9z"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m0 0L7 8m5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></symbol>
+    <symbol id="i-upload-arrow" viewBox="0 0 24 24"><path d="M12 16V3m0 0L7 8m5-5 5 5"/></symbol>
+    <symbol id="i-upload-tray" viewBox="0 0 24 24"><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></symbol>
+    <symbol id="i-orbit-ring" viewBox="0 0 24 24"><path d="M19.4 4.6c2 2-1.4 8.7-7.5 14.8S-.9 22.9 3.1 18.9 11.8 1.4 18 2.6M4.6 4.6c-2 2 1.4 8.7 7.5 14.8s12.8 3.5 8.8-.5S12.2 1.4 6 2.6"/></symbol>
+    <symbol id="i-orbit-satellite" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4"/><path d="m9.8 9.8-2-2m6.4 6.4 2 2"/></symbol>
+    <symbol id="i-terminal-frame" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/></symbol>
+    <symbol id="i-terminal-prompt" viewBox="0 0 24 24"><path d="m7 9 3 3-3 3"/></symbol>
+    <symbol id="i-terminal-caret" viewBox="0 0 24 24"><path d="M13 15h4"/></symbol>
+    <symbol id="i-layer-high" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5Z"/></symbol>
+    <symbol id="i-layer-mid" viewBox="0 0 24 24"><path d="m3 12 9 5 9-5"/></symbol>
+    <symbol id="i-layer-low" viewBox="0 0 24 24"><path d="M3 17l9 5 9-5"/></symbol>
+    <symbol id="i-database-shell" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol>
+    <symbol id="i-database-packet" viewBox="0 0 24 24"><rect x="9" y="10" width="6" height="3" rx=".8"/></symbol>
+    <symbol id="i-motion-probe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  </svg>
+
+  <div id="app" class="app-shell" data-state="loading">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="BRPHM 湖南大学">
+        <picture class="brand-emblem"><source media="(max-width: 760px)" srcset="__HNU_VERTICAL_SVG_DATA__"><img src="__HNU_HORIZONTAL_SVG_DATA__" width="700" height="250" alt="湖南大学校徽校名"></picture>
+        <span class="brand-copy"><strong>BRPHM</strong><small>航天器关键部件寿命预测与任务仿真</small></span>
+      </a>
+      <div class="route-rail" aria-label="当前已核验模型身份">
+        <span class="route-signal" aria-hidden="true"><i></i></span>
+        <span><small>当前已核验模型身份</small><strong id="route-label">生产模型待核验</strong></span>
+      </div>
+      <nav class="view-tabs" aria-label="主视图">
+        <button class="view-tab is-active" data-view="predict"><svg class="icon"><use href="#i-upload"/></svg><span>寿命预测</span></button>
+        <button class="view-tab" data-view="operate"><svg class="icon"><use href="#i-orbit"/></svg><span>示例回放</span></button>
+        <button class="view-tab" data-view="workflows"><svg class="icon"><use href="#i-terminal"/></svg><span>任务中心</span></button>
+        <button class="view-tab" data-view="evidence"><svg class="icon"><use href="#i-layers"/></svg><span>方法验证</span></button>
+        <button class="view-tab" data-view="system"><svg class="icon"><use href="#i-database"/></svg><span>数据来源</span></button>
+      </nav>
+      <div class="topbar-right">
+        <span id="source-badge" class="status-pill" data-slot="source-badge"><i aria-hidden="true"></i><span>正在装载</span></span>
+        <time id="utc-clock" datetime="">--:--:--</time>
+      </div>
+    </header>
+
+    <div id="state-banner" class="state-banner" role="status" hidden></div>
+
+    <main>
+      <section id="view-predict" class="view is-active predict-view" aria-label="寿命预测">
+        <header class="predict-heading">
+          <div>
+            <span class="kicker">BRPHM 预测工作台</span>
+            <h1>把遥测记录交给模型，得到有边界的寿命判断</h1>
+            <p>上传一份或一批遥测时序表。当前预测输入支持两种布局：长表使用“时间、遥测量、值”，宽表使用“时间 + 一个或多个数值遥测通道列”。系统分别为电池部件（储能系统）和反作用轮部件（姿态控制执行器）提供 PyTorch 剩余寿命预测模型。页面只有在模型身份、输入要求和文件完整性通过服务端核验后才会启用正式预测。接口不限定唯一固定列名，但每个表头必须能唯一映射到字段语义。用于复现、发布或长期维护的数据集还必须记录单位、组件或工况、退化状态或寿命标签，并配套数据字典；预测时不要求提供未来标签。未参与预测的上下文只用于回放与溯源。</p>
+          </div>
+          <div class="predict-engine-note" aria-label="推理方式">
+            <svg class="icon" aria-hidden="true"><use href="#i-activity"/></svg>
+            <span>当前已核验模型身份</span>
+            <strong id="predict-route-label">生产模型待核验</strong>
+          </div>
+        </header>
+
+        <section class="prediction-intake" aria-label="上传遥测并预测">
+          <form id="telemetry-form" class="telemetry-form" novalidate>
+            <label id="telemetry-dropzone" class="telemetry-dropzone" for="telemetry-files">
+              <input id="telemetry-files" name="files" type="file" accept=".csv,.tsv,.txt,.tab,.dat,.json,.jsonl,.ndjson,.xlsx,.xls,.xlsm,.xlsb,.ods,.parquet,.pq,.feather,.arrow,.ipc,.mat,.h5,.hdf5,.npy,.npz,.zip,.7z,.rar,.tar,.tar.gz,.tgz,.tar.bz2,.tbz2,.tar.xz,.txz,.gz" multiple>
+              <svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg>
+              <strong>选择遥测文件，或拖放到这里</strong>
+              <span id="telemetry-file-hint">支持 CSV、TSV、TXT 分隔文本；兼容 UTF-8、GB18030；可一次提交多个文件。</span>
+            </label>
+            <div class="intake-signal" aria-hidden="true">
+              <span>文件</span><i></i><span>语义识别</span><i></i><span>部件识别与分流</span><i></i><span>寿命结果</span>
+            </div>
+            <div class="telemetry-queue">
+              <div class="queue-heading"><span class="section-label">本次队列</span><span id="telemetry-queue-count">尚未选择文件</span></div>
+              <div id="telemetry-file-list" class="telemetry-file-list" aria-live="polite"><p>尚未选择文件</p></div>
+            </div>
+            <div class="telemetry-options">
+              <label><span>选择预测部件</span><select id="telemetry-line" name="line"><option value="auto">自动识别</option><option value="bat">电池部件（储能系统）</option><option value="rwa">反作用轮部件（姿态控制执行器）</option></select><small>自动识别发现多个部件通道时，会提示您明确选择部件，以便按对应模型处理；明确选择后，只使用该部件模型已核验的输入通道，并列出未参与项。</small></label>
+              <label class="telemetry-platform-field" hidden><span>航天器反作用轮配置</span><select id="telemetry-platform-configuration" aria-label="声明航天器是否搭载反作用轮部件（姿态控制执行器）"><option value="unspecified">未说明</option><option value="not_equipped">未搭载反作用轮部件（姿态控制执行器）</option><option value="equipped">搭载反作用轮部件（姿态控制执行器）</option></select><small id="telemetry-platform-hint" aria-live="polite">电池部件（储能系统）数据不能证明整星是否搭载反作用轮部件（姿态控制执行器），请按航天器事实声明；该项只用于回放与溯源，不进入模型。</small></label>
+              <label id="telemetry-attitude-method-field" class="telemetry-attitude-field" hidden><span>姿态稳定方式</span><select id="telemetry-attitude-method" aria-label="选择未搭载反作用轮部件（姿态控制执行器）时的姿态稳定方式"><option value="unspecified">未提供</option><option value="magnetorquer">磁力矩器</option><option value="passive_magnetic">被动磁稳定</option><option value="spin_stabilized">自旋稳定</option><option value="other">其他</option></select><small>未搭载反作用轮部件（姿态控制执行器）不等于无姿态稳定；本项仅作回放与溯源上下文。</small></label>
+              <div class="telemetry-unit-guide"><span>每个文件的时间单位</span><small>表头已写单位可保留“由表头识别”；表头仅为 time 时，请在文件行中单独选择。批量文件可使用不同单位。</small></div>
+            </div>
+            <div class="telemetry-actions">
+              <button id="telemetry-submit" class="primary-command" type="submit"><svg class="icon"><use href="#i-activity"/></svg>验证并预测</button>
+              <button id="telemetry-reset" class="secondary-command" type="button">清除选择</button>
+              <span id="telemetry-status" role="status">等待遥测文件</span>
+            </div>
+            <details class="display-context">
+              <summary><span>补充回放场景</span><small>可选 · 只影响本次页面展示，不进入模型</small></summary>
+              <div class="display-context-grid">
+                <label class="orbit-mode-field"><span>轨道定义方式</span><select id="context-orbit-mode" aria-label="选择轨道定义方式"><option value="unspecified">未指定，不绘制轨迹</option><option value="circular">圆轨道 · 高度</option><option value="apsides">椭圆轨道 · 近地点/远地点</option><option value="state">状态量 · 高度/切向速度</option></select><small>没有原始根数时保持未指定，不由页面猜测。</small></label>
+                <label><span>轨道时间基准（UTC）</span><input id="context-epoch-utc" type="text" inputmode="text" autocomplete="off" placeholder="例如 2026-01-01T00:00:00Z"><small>二维星下点必需；无法确认时不绘制。请填写 ISO 8601 或 GMAT UTC 时间。</small></label>
+                <label><span>当前位置/圆轨道高度</span><input id="context-altitude" type="number" inputmode="decimal" step="any" placeholder="例如 550"><small>km · 地心高度</small></label>
+                <label><span>近地点高度</span><input id="context-perigee" type="number" inputmode="decimal" step="any" placeholder="例如 120"><small>km · 椭圆模式</small></label>
+                <label><span>远地点高度</span><input id="context-apogee" type="number" inputmode="decimal" step="any" placeholder="例如 800"><small>km · 椭圆模式</small></label>
+                <label><span>当前位置切向速度</span><input id="context-speed" type="number" inputmode="decimal" step="any" placeholder="例如 7.6"><small>km/s · 状态量模式；无径向速度时按近/远地点解释</small></label>
+                <label><span>轨道倾角</span><input id="context-inclination" type="number" min="0" max="180" step="0.1" placeholder="例如 97.6"><small>deg</small></label>
+                <label><span>升交点赤经</span><input id="context-raan" type="number" inputmode="decimal" step="any" placeholder="例如 71.6"><small>deg · 可选</small></label>
+                <label><span>近地点幅角</span><input id="context-aop" type="number" inputmode="decimal" step="any" placeholder="例如 90"><small>deg · 可选</small></label>
+                <label><span>真近点角</span><input id="context-ta" type="number" inputmode="decimal" step="any" placeholder="例如 0"><small>deg · 可选</small></label>
+                <label><span>运行工况</span><input id="context-condition" type="text" maxlength="80" placeholder="例如 额定载荷"></label>
+                <label><span>退化状态</span><input id="context-degradation" type="text" maxlength="80" placeholder="例如 轻度退化"></label>
+                <label><span>失效标签</span><input id="context-failure" type="text" maxlength="80" placeholder="例如 容量阈值"></label>
+              </div>
+              <p id="context-orbit-validation" class="orbit-validation-message" role="status" aria-live="polite"></p>
+            </details>
+          </form>
+
+          <aside class="input-contract" aria-label="上传数据说明">
+            <div class="input-contract-heading"><span class="section-label">输入要求</span><div class="input-contract-actions"><button id="download-telemetry-template" class="utility-button" type="button"><svg class="icon"><use href="#i-download"/></svg>下载空白模板</button><button id="telemetry-example-toggle" class="utility-button" type="button" aria-expanded="false" aria-controls="telemetry-example-panel"><svg class="icon"><use href="#i-download"/></svg>获取表格范例</button></div></div>
+            <h2>长表或宽表，语义必须唯一</h2>
+            <p class="contract-lead">当前预测接口不限定唯一固定字段名，接受能明确识别语义的长表或宽表，并将合格宽表转换为统一的时序记录。用于复现、发布或长期维护的数据集还必须说明单位、组件或工况、退化状态或寿命标签，并配套数据字典。下面的通道名和模板只代表 BRPHM 当前模型的可读取范围，不是通用时序数据的固定字段，也不是外部数据集标准。</p>
+            <div class="long-table-diagram" aria-label="长表字段关系"><span>时间</span><i></i><span>遥测量</span><i></i><span>值</span></div>
+              <div class="contract-inference-gate" aria-label="时序结构读取与模型预测的关系">
+              <div><span>结构化接入</span><strong>一项或有限多项数值通道</strong></div><i aria-hidden="true"></i><div><span>预测条件</span><strong>映射当前已核验模型通道</strong></div>
+                <p>表格能被读取不等于可以预测。只有能映射到当前模型通道的文件才会生成寿命区间；无法映射的数据会逐文件说明原因，不会替换成未经核验的预测。</p>
+            </div>
+            <section class="tree-model-safety-callout" aria-label="固定模型输入与树模型安全边界">
+              <div class="tree-model-safety-heading"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><div><strong>为什么不能把任意表格直接交给模型</strong><span>树模型对列的含义、顺序、窗口长度和时间分箱都敏感。</span></div></div>
+                <p>服务端会先识别布局、映射字段、核对单位和时间、排序并构造连续窗口，最后检查数据形状；确认一致后才运行 PyTorch 模型及其统计预测模块。增加无关列不会改变模型；如缺少必需通道、存在时间断档、单位倍率不明或语义无法消歧，系统会逐文件给出补充或修正指引，并在信息完整前暂不生成预测，不会复制已有通道或按列位置猜测。</p>
+              <div class="tree-model-shape-grid">
+                <div><strong>电池部件（储能系统）</strong><span>60 个循环 × 4 个规范通道</span><small>树专家：52 个统计特征 · PyTorch：55 个直接特征</small></div>
+                <div><strong>反作用轮部件（姿态控制执行器）</strong><span>30 个 574 秒时间桶 × 13 个规范特征</span><small>树专家：390 个展开特征 · PyTorch：172 个直接特征</small></div>
+              </div>
+              <p class="tree-model-safety-foot">因此，“文件能读取”只表示表格结构可解析；“生成预测”还必须满足组件、字段、单位、时间轴、历史长度和最终维度全部一致。未知数值列会保留在诊断中但不参与模型，未来标签和未声明派生量永不进入推理。</p>
+            </section>
+            <div class="contract-at-a-glance" aria-label="上传前快速核对">
+              <div class="contract-glance-card is-required"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span>长表</span><strong>时间 · 遥测量 · 值</strong></div>
+              <div class="contract-glance-card is-required"><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg><span>宽表</span><strong>时间 · 已声明通道列</strong></div>
+              <div class="contract-glance-card"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg><span>批量逐项处理</span><strong>每个文件独立说明</strong></div>
+            </div>
+            <dl class="contract-summary contract-summary-compact">
+              <div><dt>可读取文件</dt><dd>结构化时序表 / 安全压缩包</dd></div>
+              <div><dt>识别规则</dt><dd>表头语义唯一，不按位置猜测</dd></div>
+              <div><dt>文本编码</dt><dd>UTF-8 / GB18030</dd></div>
+            </dl>
+            <button id="upload-contract-jump" class="contract-open-button" type="button"><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg><span><strong>查看完整支持范围</strong><small>文件格式、表头写法、模型通道与可选上下文</small></span><svg class="icon contract-open-chevron" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+            <section id="telemetry-example-panel" class="telemetry-example-panel" hidden aria-label="可下载的输入表格范例"><header><strong>输入表格范例</strong><button id="telemetry-example-close" class="icon-button" type="button" aria-label="关闭表格范例"><svg class="icon"><use href="#i-x"/></svg></button></header><p>范例同时提供宽表和长表链接。必需通道会进入预测；组件标识、工况、退化状态和寿命标签仅用于文件说明或演示，不进入当前模型。</p><div id="telemetry-example-list" class="telemetry-example-list"><p>正在读取范例目录…</p></div></section>
+            <button class="example-link" type="button" data-view="operate"><svg class="icon"><use href="#i-orbit"/></svg><span>查看项目内置示例回放</span></button>
+          </aside>
+        </section>
+
+        <section id="telemetry-result-region" class="telemetry-result-region" aria-live="polite">
+          <header><div><span class="section-label">预测结果</span><h2>等待提交</h2></div><div class="result-actions"><button id="telemetry-add-all" class="utility-button" type="button" disabled><svg class="icon"><use href="#i-orbit"/></svg>全部加入回放</button><a id="telemetry-export" class="utility-button" href="#" hidden><svg class="icon"><use href="#i-download"/></svg>导出结果</a></div></header>
+           <p id="telemetry-result-summary">每个文件独立校验。部分文件不满足输入要求时，其余合格文件仍会生成结果，错误不会被掩盖。</p>
+          <div id="telemetry-results" class="telemetry-results"></div>
+        </section>
+
+        <section id="upload-contract-panel" class="upload-contract-panel" aria-label="支持的文件与校验准则">
+           <header id="upload-contract-panel-heading" class="upload-contract-panel-heading" tabindex="-1">
+             <div><span class="kicker">上传前核对</span><h2>支持范围与校验准则</h2><p>先确认文件能唯一映射为遥测时序语义，再提交预测。这里的说明只描述当前服务端实际接受的边界。</p></div>
+            <button id="upload-contract-collapse" class="icon-button" type="button" aria-expanded="true" aria-controls="upload-contract-guide" title="收起支持范围"><svg class="icon"><use href="#i-chevron"/></svg></button>
+          </header>
+          <details id="upload-contract-guide" class="upload-contract-guide" open>
+                    <summary><span>支持的文件与校验原则</span><small id="telemetry-schema-state" aria-live="polite">正在读取服务端输入说明</small></summary>
+            <div class="upload-contract-body">
+                <p class="contract-intro">提交长表或宽表：长表每行是一条观测，宽表每行是一个时间点。两者都必须由表头唯一识别，宽表会在服务端转换为统一的时间、遥测量、值记录，不会按列位置或数值形状猜测。</p>
+              <ul class="contract-guidelines">
+                <li><strong>两种输入布局</strong><span>长表为时间、遥测量、值；宽表为时间加一个或多个遥测通道列。</span></li>
+                 <li><strong>时序接入与预测</strong><span>一项或有限多项数值通道可按长表或宽表结构读取；结构化接入不等于当前即可预测。只有能映射到当前模型通道的文件才会生成寿命区间，未映射数据会逐文件说明原因，不替换为泛化预测。</span></li>
+                <li><strong>预测输入与数据集文档</strong><span>当前预测可不带未来标签；用于复现、发布或长期维护的数据集还必须表达单位、组件或工况标识、退化状态或寿命标签，并配套数据字典。已声明模型通道的单位参与一致性校验，但单位本身不是模型特征。</span></li>
+                 <li><strong>表头与列序</strong><span>按表头语义识别，不按位置猜测；未知数值通道会明确列为未参与模型。遇到重复通道或混合布局时，系统会说明需要整理的内容，并在整理完成前暂不生成预测。</span></li>
+                <li><strong>文本编码</strong><span>UTF-8 或 GB18030。</span></li>
+              </ul>
+              <details class="field-reference">
+                <summary>表头、时间单位与写法</summary>
+                <div class="field-reference-grid">
+                  <div><strong>时间 / time</strong><p>推荐精确写成 <code>cycle</code>、<code>time_ms</code>、<code>time_s</code>、<code>time_min</code>、<code>time_h</code>、<code>time_day</code> 或 <code>time_bin</code>。普通 <code>time</code> 不带单位，必须在文件行手动选择。</p></div>
+                  <div><strong>遥测量 / telemetry</strong><p>长表也可写 channel、signal、metric、遥测量(telemetry)。宽表则把下方已声明通道名直接作为列名。</p></div>
+                  <div><strong>值 / value</strong><p>也可写 reading、measurement、值(value)。每个值必须是有限数值，不能是 NaN 或 Inf。</p></div>
+                </div>
+                <div class="time-header-reference" aria-label="时间表头精确写法">
+                  <span><code>cycle</code><small>循环序号：第几次循环</small></span><span><code>time_ms</code><small>相对时间，单位毫秒</small></span><span><code>time_s</code><small>相对时间，单位秒</small></span><span><code>time_min</code><small>相对时间，单位分钟</small></span><span><code>time_h</code><small>相对时间，单位小时</small></span><span><code>time_day</code><small>相对时间，单位天</small></span><span><code>time_bin</code><small>已聚合时间桶索引，不是秒或天</small></span>
+                </div>
+                <p class="time-format-note">同时接受 <code>time(s)</code>、<code>time[s]</code>、<code>时间（秒）</code>、<code>时间[秒]</code>、<code>时间_秒</code> 等受控写法，全角括号会按同义符号处理；不会把 <code>times</code> 猜成 <code>time_s</code>。<code>time_bin</code> 表示“先把固定时长内的观测按服务端规则汇总，再用 0、1、2… 标记第几个桶”，它不能直接换算成秒、分钟或天。宽表和长表使用同一时间表头规则。</p>
+              </details>
+              <details class="field-reference">
+                <summary>当前模型可读取的遥测通道</summary>
+                <div class="channel-reference">
+                  <div><strong>电池部件剩余寿命预测模型（储能系统） · 三项必需输入</strong><p class="channel-contract-note">以下仅是 BRPHM 当前冻结模型的可读取范围，不是通用时序数据的固定字段或外部数据集模板。该模型可独立预测，无需提供反作用轮部件（姿态控制执行器）占位遥测；输出只代表电池部件（储能系统）的剩余寿命，不代表整星寿命。</p><code>bat.capacity_ah</code><p>容量 Ah；别名 <code>capacity_ah</code>、<code>battery_capacity_ah</code>、电池容量Ah、容量Ah。</p><code>bat.temp_mean_c</code><p>平均温度 °C；别名 <code>temp_mean_c</code>、<code>battery_temp_mean_c</code>、<code>battery_temperature_c</code>、电池平均温度C。</p><code>bat.charge_time_s</code><p>充电时长 s；别名 <code>charge_time_s</code>、<code>battery_charge_time_s</code>、充电时长s。</p></div>
+                  <div><strong>反作用轮部件剩余寿命预测模型（姿态控制执行器） · 三项必需输入</strong><p class="channel-contract-note">以下仅是 BRPHM 当前冻结模型的可读取范围，不是通用时序数据的固定字段或外部数据集模板。原始遥测输入由服务端按冻结时间桶规则聚合后再预测。</p><code>rw.speed_rpm</code><p>转速 rpm；别名 <code>wheel_speed_rpm</code>、<code>reaction_wheel_speed_rpm</code>、转速rpm。</p><code>rw.motor_current_a</code><p>电机电流 A；别名 <code>wheel_current_a</code>、<code>reaction_wheel_current_a</code>、电机电流A。</p><code>rw.bearing_temp_c</code><p>轴承温度 °C；别名 <code>reaction_wheel_bearing_temp_c</code>、轴承温度C。服务端按 574 秒规则聚合。</p></div>
+                  <div><strong>反作用轮部件（姿态控制执行器）模型的已聚合特征输入</strong><p>也接受上述三项的 <code>.mean</code>、<code>.std</code>、<code>.min</code>、<code>.max</code> 共十二项，以及 <code>rw.fric_tc.mean</code>；时间表头必须写 <code>time_bin</code> 或明确选择时间桶。</p></div>
+                </div>
+              </details>
+              <details class="field-reference">
+                <summary>可选上下文字段与物理含义</summary>
+                <div class="optional-field-reference">
+                  <div><code>orbit_altitude_km</code><span>轨道高度 km：当前点或圆轨道的地心高度，即地心距离减去 6378.1363 km 地球赤道参考半径。</span></div>
+                  <div><code>orbit_inclination_deg</code><span>轨道倾角 deg：轨道平面与地球赤道平面的夹角，范围 0 至 180 度。</span></div>
+                  <div><code>orbital_period_min</code><span>轨道周期 min：完成一整圈轨道公转所需时间。</span></div>
+                  <div><code>orbit_perigee_altitude_km</code><span>近地点高度 km：椭圆轨道离地球最近点的地心高度，必须不小于任务边界 120 km。</span></div>
+                  <div><code>orbit_apogee_altitude_km</code><span>远地点高度 km：椭圆轨道离地球最远点的地心高度，不能小于近地点高度。</span></div>
+                  <div><code>orbit_eccentricity</code><span>偏心率 e：0 表示圆轨道，0&lt;e&lt;1 表示闭合椭圆，e=1 表示抛物线，e&gt;1 表示双曲线。</span></div>
+                  <div><code>orbit_semi_major_axis_km</code><span>轨道半长轴 a（km）：由原始根数提供时优先使用，不从缺失字段反推。</span></div>
+                  <div><code>orbit_speed_km_s</code><span>当前切向速度 km/s：与高度一起用于比机械能和逃逸速度检查。</span></div>
+                  <div><code>orbit_raan_deg</code><span>升交点赤经 deg：参考赤道面上的轨道定向角。</span></div>
+                  <div><code>orbit_arg_periapsis_deg</code><span>近地点幅角 deg：升交点到近地点的轨道面内角度。</span></div>
+                  <div><code>orbit_true_anomaly_deg</code><span>真近点角 deg：当前点相对于近地点的轨道面内角度。</span></div>
+                  <div><code>operating_condition</code><span>原数据提供的运行工况标识或标量。</span></div>
+                  <div><code>degradation_state</code><span>原数据提供的退化状态或标量。</span></div>
+                  <div><code>rul</code><span>原数据提供的剩余寿命真值，仅用于溯源或后续离线评价，不是当前预测特征。</span></div>
+                  <div><code>life_label</code><span>原数据提供的寿命阶段或寿命真值标签，仅用于溯源或后续离线评价。</span></div>
+                  <div><code>failure_label</code><span>原数据提供的失效标签，仅用于溯源或后续离线评价。</span></div>
+                </div>
+                <p class="time-format-note">这些上下文字段对当前预测请求可省略，缺失不会阻塞推理；用于复现、发布或长期维护的数据集仍必须表达单位、组件或工况标识、退化状态或寿命标签，并随数据字典说明来源与生成依据。当前已核验模型未声明这些输入，因此只用于回放与溯源，上传接口不执行逐时标签评价，也不会由页面补造。派生遥测只有在来源、计算/测量链、预测时可获得性、采样特性和退化关系可追溯且被模型明确支持时，才可能进入未来模型；标签和未来信息永远不进入当前预测。轨道参数不足或物理状态无法判定时，二维和三维轨迹均显示“未指定，不绘制轨迹”。</p>
+              </details>
+              <dl id="telemetry-format-groups" class="format-groups" aria-label="当前支持的数据格式"><div><dt>分隔文本</dt><dd>CSV / TSV / TXT</dd></div></dl>
+               <dl id="telemetry-schema-summary" class="contract-summary contract-summary-panel" aria-label="服务端输入说明摘要"></dl>
+              <dl id="telemetry-dataset-documentation" class="contract-summary dataset-documentation-panel" aria-label="可复现数据集的数据字典要素"><div><dt>数据字典</dt><dd>用于复现、发布或长期维护的数据集必须说明字段含义、采样频率、单位、缺失值规则、数据划分方法和标签生成依据；当前上传接口只校验预测输入，不替代完整数据文档审查。</dd></div></dl>
+              <p id="telemetry-safety-note" class="upload-safety-note">遇到暂不支持或无法可靠解析的格式、缺少字段或表头歧义时，系统会显示逐文件原因和整理建议，并在信息明确前暂不生成预测。</p>
+            </div>
+          </details>
+        </section>
+
+      </section>
+
+      <section id="view-operate" class="view" aria-label="示例与本次上传预测回放">
+        <div class="workbench">
+          <aside class="asset-rail" aria-label="部件与样本">
+            <div class="panel-heading">
+              <div><span class="kicker">回放工作区</span><h2>示例与本次上传</h2></div>
+              <span id="line-count" class="count-badge">--</span>
+            </div>
+            <div id="scenario-control" class="segmented" role="radiogroup" aria-label="部件类型">
+              <button data-line="bat" role="radio" aria-checked="true"><b>电池部件（储能系统）</b><span>剩余寿命预测模型</span></button>
+              <button data-line="rw" role="radio" aria-checked="false"><b>反作用轮部件（姿态控制执行器）</b><span>剩余寿命预测模型</span></button>
+            </div>
+            <label class="search-box"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><input id="sample-search" type="search" placeholder="搜索样本、工况、失效模式；支持拼音与简拼" autocomplete="off"></label>
+            <div class="rail-meta"><span id="sample-filter-state">全部可见样本</span><span class="rail-actions"><button id="hide-visible-samples" type="button">清空列表</button><button id="restore-samples" type="button" hidden>恢复</button></span></div>
+            <div id="asset-list" class="asset-list" data-slot="asset-list" aria-label="当前可见回放样本"></div>
+          </aside>
+
+          <section class="mission-stage" aria-label="任务态势与同步回放">
+            <header class="stage-heading">
+              <div class="stage-title">
+                <span class="kicker">同步回放工作区</span>
+                <h1 id="sample-title">加载样本…</h1>
+                 <p id="sample-subtitle">正在读取项目内置遥测回放与已登记预测结果</p>
+              </div>
+              <dl class="stage-facts">
+                <div><dt>平台构型</dt><dd id="fact-platform">--</dd></div>
+                <div><dt>轨道工况</dt><dd id="fact-orbit">--</dd></div>
+                <div><dt>退化状态</dt><dd id="fact-condition">--</dd></div>
+                <div><dt>失效标签</dt><dd id="fact-failure">--</dd></div>
+              </dl>
+              <button id="sample-sheet-button" class="compact-sample-button" type="button" aria-label="打开样本选择" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg><span>切换样本</span></button>
+            </header>
+
+            <details id="replay-context-editor" class="replay-context-editor" hidden>
+              <summary>
+                <span class="replay-context-summary-copy"><svg class="icon" aria-hidden="true"><use href="#i-orbit"/></svg><span><strong>本次上传的回放上下文</strong><small>浏览器临时假设 · 不改原文件 · 不重算模型</small></span></span>
+                <svg class="icon replay-context-chevron" aria-hidden="true"><use href="#i-chevron"/></svg>
+              </summary>
+              <div class="replay-context-body" tabindex="0" aria-label="回放上下文参数区域">
+                <form id="replay-context-form" novalidate>
+                  <section class="replay-context-section platform-context-section" aria-labelledby="platform-context-heading">
+                    <header><span><strong id="platform-context-heading">平台构型</strong><small>由用户声明，不根据遥测缺席推断</small></span><em>不进入模型</em></header>
+                    <div class="replay-context-fields platform-context-fields">
+                      <label><span>航天器反作用轮配置</span><select id="replay-context-platform-configuration" aria-label="修改当前回放的航天器构型"><option value="unspecified">未说明</option><option value="not_equipped">未搭载反作用轮部件（姿态控制执行器）</option><option value="equipped">搭载反作用轮部件（姿态控制执行器）</option></select><small>修改只作用于浏览器回放说明，不改变原文件或预测值。</small></label>
+                      <label id="replay-context-attitude-method-field" hidden><span>姿态稳定方式</span><select id="replay-context-attitude-method" aria-label="修改当前回放的姿态稳定方式"><option value="unspecified">未提供</option><option value="magnetorquer">磁力矩器</option><option value="passive_magnetic">被动磁稳定</option><option value="spin_stabilized">自旋稳定</option><option value="other">其他</option></select><small>仅说明无轮构型可能采用的稳定方式，不参与寿命计算。</small></label>
+                    </div>
+                    <p class="platform-boundary-note">选择“未搭载反作用轮部件（姿态控制执行器）”时，本次结果只能解释为电池部件（储能系统）的剩余寿命；反作用轮部件（姿态控制执行器）为未搭载、不适用，不能显示为缺失、故障或零寿命。</p>
+                  </section>
+
+                  <section class="replay-context-section orbit-context-section" aria-labelledby="orbit-context-heading">
+                    <header><span><strong id="orbit-context-heading">轨道投影</strong><small>只显示当前定义方式真正需要的参数</small></span><em>可选</em></header>
+                    <div class="replay-context-fields orbit-context-fields">
+                      <label class="orbit-mode-field"><span>轨道定义方式</span><select id="replay-context-orbit-mode" aria-label="选择回放轨道定义方式"><option value="unspecified">未指定，不绘制轨迹</option><option value="circular">圆轨道 · 高度</option><option value="apsides">椭圆轨道 · 近地点/远地点</option><option value="state">状态量 · 高度/切向速度</option></select><small>按现有事实选择；不确定时保持未指定。</small></label>
+                      <label data-orbit-modes="circular state"><span>轨道高度</span><input id="replay-context-altitude" type="number" inputmode="decimal" step="any"><small>km · 相对 6378.137 km 参考地球半径</small></label>
+                      <label data-orbit-modes="circular apsides state"><span>原始轨道周期（可选）</span><input id="replay-context-period" type="number" inputmode="decimal" min="0" step="any" placeholder="例如 95.6"><small>min · 一整圈公转时间；留空则按轨道几何换算</small></label>
+                      <label data-orbit-modes="apsides"><span>近地点高度</span><input id="replay-context-perigee" type="number" inputmode="decimal" step="any"><small>km · 椭圆轨道最低点</small></label>
+                      <label data-orbit-modes="apsides"><span>远地点高度</span><input id="replay-context-apogee" type="number" inputmode="decimal" step="any"><small>km · 椭圆轨道最高点</small></label>
+                      <label data-orbit-modes="state"><span>当前位置切向速度</span><input id="replay-context-speed" type="number" inputmode="decimal" step="any"><small>km/s · 假设此刻径向速度为零</small></label>
+                      <label data-orbit-modes="circular apsides state"><span>轨道时间基准（UTC）</span><input id="replay-context-epoch-utc" type="text" inputmode="text" autocomplete="off" placeholder="例如 2026-01-01T00:00:00Z"><small>二维星下点必需；请填写 ISO 8601 或 GMAT UTC 时间，无法确认时不绘制。</small></label>
+                      <label data-orbit-modes="circular apsides state"><span>轨道倾角</span><input id="replay-context-inclination" type="number" min="0" max="180" step="0.1"><small>deg · 相对地球赤道平面</small></label>
+                      <label data-orbit-modes="circular apsides state"><span>升交点赤经</span><input id="replay-context-raan" type="number" inputmode="decimal" step="any"><small>deg · 轨道平面在赤道坐标系中的定向</small></label>
+                      <label data-orbit-modes="apsides state"><span>近地点幅角</span><input id="replay-context-aop" type="number" inputmode="decimal" step="any"><small>deg · 升交点到近地点的轨道面内角</small></label>
+                      <label data-orbit-modes="circular apsides"><span>初始轨道相位</span><input id="replay-context-ta" type="number" inputmode="decimal" step="any"><small>deg · 圆轨道按初始相位解释，椭圆轨道按真近点角解释</small></label>
+                    </div>
+                    <div id="replay-context-derived" class="orbit-derived-readout" aria-live="polite">
+                      <div><span>物理分类</span><strong id="orbit-derived-primary">等待轨道参数</strong></div>
+                      <div><span>速度换算</span><strong id="orbit-derived-speed">--</strong></div>
+                      <div><span>轨道周期</span><strong id="orbit-derived-period">--</strong></div>
+                      <p id="orbit-derived-detail">圆轨道由高度唯一换算速度与周期；椭圆轨道由近、远地点换算速度范围与周期。</p>
+                    </div>
+                  </section>
+
+                  <section class="replay-context-section context-label-section" aria-labelledby="context-label-heading">
+                    <header><span><strong id="context-label-heading">工况与标签</strong><small>优先选择常见含义，也允许保留原文件自定义值</small></span><em>可选</em></header>
+                    <div class="replay-context-fields context-label-fields">
+                      <label class="context-preset-field"><span>运行工况</span><select id="replay-context-condition-preset" data-context-preset data-context-target="replay-context-condition" aria-label="选择运行工况"><option value="">未指定</option><option value="稳定运行">稳定运行</option><option value="充电工况">充电工况</option><option value="放电工况">放电工况</option><option value="高负载工况">高负载工况</option><option value="热工况">热工况</option><option value="姿态机动">姿态机动</option><option value="__custom__">自定义原始值…</option></select><input id="replay-context-condition" class="context-custom-value" type="text" maxlength="80" hidden placeholder="输入原文件中的工况值"><small>描述任务运行条件，不进入冻结模型。</small></label>
+                      <label class="context-preset-field"><span>退化状态</span><select id="replay-context-degradation-preset" data-context-preset data-context-target="replay-context-degradation" aria-label="选择退化状态"><option value="">未指定</option><option value="健康">健康</option><option value="轻度退化">轻度退化</option><option value="中度退化">中度退化</option><option value="重度退化">重度退化</option><option value="__custom__">自定义原始值…</option></select><input id="replay-context-degradation" class="context-custom-value" type="text" maxlength="80" hidden placeholder="输入原文件中的退化状态"><small>保留原始语义，只用于回放与溯源。</small></label>
+                      <label class="context-preset-field"><span>失效标签</span><select id="replay-context-failure-preset" data-context-preset data-context-target="replay-context-failure" aria-label="选择失效标签"><option value="">未指定</option><option value="未失效">未失效</option><option value="容量衰退">容量衰退</option><option value="温度异常">温度异常</option><option value="轴承磨损">轴承磨损</option><option value="电机电流异常">电机电流异常</option><option value="__custom__">自定义原始值…</option></select><input id="replay-context-failure" class="context-custom-value" type="text" maxlength="80" hidden placeholder="输入原文件中的失效标签"><small>标签缺失不会阻止预测，也不会由页面补造。</small></label>
+                    </div>
+                  </section>
+
+                  <div class="replay-context-actions"><button class="secondary-command" type="submit"><svg class="icon" aria-hidden="true"><use href="#i-orbit"/></svg>更新回放投影</button><span>仅更新当前浏览器中的二维/三维工程投影</span></div>
+                </form>
+                <p id="replay-context-validation" class="orbit-validation-message" role="status" aria-live="polite"></p>
+                <p id="replay-context-source">原文件中的可选列保持原样；此处只补充或覆盖当前页面的展示假设。</p>
+              </div>
+            </details>
+
+            <div class="compact-sample-bar" aria-label="紧凑样本控制">
+              <div class="compact-segmented" role="radiogroup" aria-label="预测部件快捷切换">
+                <button data-compact-line="bat" role="radio" aria-checked="true">电池部件（储能系统）</button>
+                <button data-compact-line="rw" role="radio" aria-checked="false">反作用轮部件（姿态控制执行器）</button>
+              </div>
+              <button id="compact-sample-trigger" type="button"><svg class="icon"><use href="#i-satellite"/></svg><span id="compact-sample-label">选择样本</span><svg class="icon"><use href="#i-chevron"/></svg></button>
+            </div>
+
+            <div class="scene-frame" id="scene-frame" aria-label="三维任务态势投影" data-orbit-mode="globe">
+              <canvas id="orbit-fallback-canvas" aria-hidden="true"></canvas>
+              <canvas id="orbit-canvas" role="img" aria-label="可交互三维地球与样本轨道投影"></canvas>
+              <canvas id="groundtrack-canvas" role="img" aria-label="全部卫星星下点轨迹与实时位置"></canvas>
+              <div id="groundtrack-caption" class="groundtrack-caption" aria-hidden="true"></div>
+              <div class="groundtrack-map-axes" aria-hidden="true">
+                <span>经度&nbsp; −180°&nbsp;&nbsp;&nbsp; 0°&nbsp;&nbsp;&nbsp; +180°</span>
+                <span>纬度&nbsp; +90°&nbsp;&nbsp;&nbsp; 0°&nbsp;&nbsp;&nbsp; −90°</span>
+              </div>
+              <div class="scene-vignette" aria-hidden="true"></div>
+              <div class="scene-overlay scene-overlay-left">
+                <span class="scene-kicker"><svg class="icon"><use href="#i-orbit"/></svg>三维任务态势</span>
+                <strong id="scene-line-label">--</strong>
+                <span id="scene-note">工况驱动的工程投影，不替代真实星历。</span>
+              </div>
+              <div class="scene-status-stack" aria-live="polite">
+                <button id="scene-status-toggle" class="scene-status-toggle" type="button" aria-expanded="false" aria-controls="scene-status-details" title="展开或收起场景状态详情">
+                  <span class="scene-status-toggle-label">状态详情</span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg>
+                </button>
+                <div id="scene-status-details" class="scene-status-details" hidden aria-hidden="true">
+                <div class="scene-object-card">
+                  <span>当前对象</span>
+                  <strong id="scene-object-id">--</strong>
+                  <dl><div><dt>部件</dt><dd id="scene-component">--</dd></div><div><dt>风险</dt><dd id="scene-risk">--</dd></div></dl>
+                </div>
+                <div id="orbit-physics-readout" class="orbit-physics-readout"><span>轨道状态</span><strong id="orbit-physics-class">未指定</strong><small id="orbit-physics-detail">缺少足够的原始轨道根数，不绘制轨迹。</small><dl class="orbit-fact-grid" aria-label="轨道事实"><div data-orbit-fact="altitude"><dt>标称高度</dt><dd id="fact-orbit-altitude">--</dd></div><div data-orbit-fact="inclination"><dt>轨道倾角</dt><dd id="fact-orbit-inclination">--</dd></div><div data-orbit-fact="solar-beta"><dt>太阳 β 角</dt><dd id="fact-orbit-solar-beta">--</dd></div><div data-orbit-fact="raan"><dt>升交点赤经</dt><dd id="fact-orbit-raan">--</dd></div></dl><small id="orbit-fact-source">样例编码中的 B 表示太阳 β 角，不表示轨道倾角。</small><p id="orbit-context-boundary" class="orbit-context-boundary">轨道、太阳 β 角和原始提供的 eclipse_flag 仅用于工程回放与环境说明，不改变当前预测结果。预测单位为循环时，必须提供单循环持续时间或占空比，才可换算为日历时间。</p></div>
+                </div>
+              </div>
+              <div class="scene-overlay scene-overlay-right">
+                <span><i class="legend-dot cyan"></i>当前对象</span>
+                <span><i class="legend-dot amber"></i>维护窗内</span>
+                <span><i class="legend-dot gray"></i>同类样本</span>
+              </div>
+              <div class="scene-controls" role="group" aria-label="三维场景控制">
+                <button id="orbit-zoom-out" class="icon-button" type="button" title="缩小地球" aria-label="缩小地球"><svg class="icon"><use href="#i-minus"/></svg></button>
+                <span id="orbit-zoom-level" class="orbit-zoom-level" aria-live="polite">100%</span>
+                <button id="orbit-zoom-in" class="icon-button" type="button" title="放大地球" aria-label="放大地球"><svg class="icon"><use href="#i-plus"/></svg></button>
+                <button id="orbit-play" class="icon-button" type="button" title="暂停场景动画" aria-label="暂停场景动画"><svg class="icon"><use href="#i-pause"/></svg></button>
+                <button id="orbit-reset" class="icon-button" type="button" title="重置三维视角" aria-label="重置三维视角"><svg class="icon"><use href="#i-reset"/></svg></button>
+                <button id="orbit-mode" class="scene-mode-button" type="button" title="切换三维地球与二维星下点轨迹"><svg class="icon"><use href="#i-globe"/></svg><span>三维地球</span></button>
+              </div>
+              <div id="orbit-tooltip" class="scene-tooltip" hidden></div>
+            </div>
+
+            <div class="trace-panel" data-slot="telemetry">
+              <div class="trace-heading">
+                <div><span class="kicker">同步回放</span><h2>遥测 · 健康标签 · 寿命区间</h2></div>
+                <div id="channel-control" class="channel-control" role="group" aria-label="遥测通道"></div>
+              </div>
+              <div class="trace-key" aria-label="曲线类型">
+                <span><i class="key-line telemetry"></i><b id="trace-key-observation-label">内置遥测</b></span><span><i class="key-line truth"></i><b id="trace-key-truth-label">回放标签</b></span><span><i class="key-line model"></i>模型预测</span><span><i class="key-band"></i>预测范围</span>
+              </div>
+              <div id="trace-frame" class="trace-frame">
+                <svg id="telemetry-canvas" role="img" aria-label="遥测、寿命真值与预测区间同步曲线"></svg>
+                <div id="trace-tooltip" class="trace-tooltip" hidden></div>
+              </div>
+              <div class="playback" aria-label="回放控制">
+                <button id="play-button" class="icon-button play-button" type="button" title="播放回放" aria-label="播放回放"><svg class="icon"><use href="#i-play"/></svg></button>
+                <button id="speed-button" class="speed-button" type="button" title="切换回放速度" aria-label="切换回放速度">1×</button>
+                <input id="scrubber" type="range" min="0" max="1000" value="0" aria-label="回放进度">
+                <output id="progress-output" for="scrubber">0%</output>
+                <span id="raw-time-output" class="raw-time">--</span>
+              </div>
+              <div class="current-strip" aria-live="polite">
+                <div><span>原始时间</span><strong id="current-raw-time">--</strong></div>
+                <div><span id="current-channel-label">遥测通道</span><strong id="current-channel-value">--</strong></div>
+                <div><span>HI 仿真标签</span><strong id="current-hi">--</strong></div>
+                <div><span id="current-model-label">回放标签</span><strong id="current-model-time">--</strong></div>
+              </div>
+            </div>
+          </section>
+
+          <aside class="decision-rail" aria-label="健康决策">
+            <div class="panel-heading decision-heading"><div><span class="kicker">健康决策</span><h2>预测与维护边界</h2></div><span id="decision-state" class="decision-state">--</span></div>
+            <section class="hero-rul" data-slot="rul-countdown">
+              <div id="rul-scope-label" class="section-label">部件模型剩余寿命</div>
+              <div class="hero-number"><strong id="rul-value">--</strong><small id="rul-unit">--</small></div>
+              <div id="rul-truth-delta" class="delta-note">--</div>
+              <div class="hero-meter"><i id="rul-meter-fill"></i><span id="rul-meter-marker"></span></div>
+            </section>
+            <section class="component-scope-block" data-slot="component-scope" aria-label="本次部件评估范围">
+              <header><span class="section-label">本次部件评估范围</span><strong id="platform-scope-state">构型未说明</strong></header>
+              <div class="component-scope-grid"><div><span>电池部件（储能系统）</span><strong id="battery-scope-value">--</strong></div><div><span>反作用轮部件（姿态控制执行器）</span><strong id="wheel-scope-value">--</strong></div></div>
+              <p id="component-scope-note">平台构型只作上下文；当前模型输出不代表整星剩余寿命。</p>
+            </section>
+            <section class="interval-block" data-slot="conf-fan">
+              <header><span class="section-label">当前模型预测范围</span><strong id="interval-value">--</strong></header>
+              <div class="interval-track"><i id="interval-band"></i><b id="interval-median"></b></div>
+              <div class="interval-labels"><span id="p10-value">P10 --</span><span id="p90-value">P90 --</span></div>
+              <p id="interval-note">预测范围按已核验模型版本的输出规则呈现，原始输出完整保留。</p>
+            </section>
+            <section class="safety-block" data-slot="output-boundary" aria-label="预测输出边界说明">
+              <header><span class="section-label">输出边界说明</span><strong id="safety-state">--</strong></header>
+              <div class="safety-grid"><div><span>原始模型估计</span><strong id="raw-rul-value">--</strong></div><div><span>按边界呈现</span><strong id="safe-rul-value">--</strong></div><div><span>边界处理</span><strong id="clamp-value">--</strong></div></div>
+              <p id="safety-note">正在读取预测输出边界说明。</p>
+            </section>
+            <section class="hi-block" data-slot="hi-gauge">
+              <header><span class="section-label">HI 仿真标签</span><strong id="hi-value">--</strong></header>
+              <div class="hi-track"><i id="hi-fill"></i><b id="hi-marker"></b></div>
+              <p id="hi-policy-note">真值只用于回放解释，不作为在线预测输入。</p>
+            </section>
+            <section class="warning-block" data-slot="alert-lights">
+              <span class="section-label">回放风险状态</span>
+              <div class="warning-row"><i id="warning-icon" aria-hidden="true"></i><strong id="warning-label">--</strong></div><p id="warning-reason">--</p>
+            </section>
+            <section class="maintenance-block" data-slot="maintenance">
+              <span class="section-label">保守维护窗口</span><strong id="maintenance-value">--</strong><p id="maintenance-note">--</p>
+            </section>
+            <section class="model-compare" data-slot="preds-strip">
+              <span class="section-label">相同时间窗的模型对照</span>
+              <div><span>公开退化数据基线</span><strong id="supervised-value">--</strong></div><div><span>航天数据适配结果</span><strong id="transfer-value">--</strong></div><div><span>当前模型结果</span><strong id="ensemble-value">--</strong></div>
+            </section>
+            <button id="provenance-button" class="provenance-button" aria-expanded="false" type="button"><span><small>点击前往“数据来源”，查看当前样本、数据集与模型版本</small><strong id="version-state">--</strong></span><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="view-workflows" class="view secondary-view workflow-view" aria-label="任务中心">
+        <header class="section-heading workflow-heading">
+          <div><span class="kicker">业务流程</span><h1>任务中心</h1><p>在这里选择目标、核对输入、确认影响并查看结果。页面会用清晰的字段说明每一步。</p></div>
+          <div class="coverage-readout"><strong id="operation-ready-count">--</strong><span>已登记业务流程</span><i id="operation-ready-bar"></i></div>
+        </header>
+        <ol class="workflow-journey" aria-label="任务执行过程">
+          <li class="is-current"><span>1</span><strong>选择目标</strong><small>从已登记流程中选择</small></li>
+          <li><span>2</span><strong>核对输入</strong><small>系统检查格式与资源</small></li>
+          <li><span>3</span><strong>确认执行</strong><small>仅在需要时确认写入</small></li>
+          <li><span>4</span><strong>查看结果</strong><small>返回可下载的真实产物</small></li>
+        </ol>
+        <div class="workflow-toolbar">
+          <label class="search-box operation-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><input id="operation-search" type="search" placeholder="搜索任务、用途或输入说明；支持拼音与简拼" autocomplete="off"></label>
+          <label class="select-shell"><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg><select id="operation-category-filter" aria-label="操作分类"><option value="all">全部分类</option></select></label>
+          <div class="risk-filter" role="group" aria-label="风险筛选"><button class="is-active" data-risk-filter="all">全部</button><button data-risk-filter="read">只读</button><button data-risk-filter="write">写入</button><button data-risk-filter="heavy">长时</button></div>
+          <span class="task-safety-note"><svg class="icon"><use href="#i-shield"/></svg>仅显示面向用户的流程</span>
+        </div>
+        <div class="workflow-shell">
+          <aside class="operation-picker" aria-label="操作目录">
+            <div class="operation-heading"><span class="section-label">可执行任务</span><span id="operation-count">--</span></div>
+            <div id="operation-list"></div>
+          </aside>
+          <section class="operation-editor" aria-label="操作参数">
+            <header><div><span id="operation-category" class="kicker">--</span><h2 id="operation-title">选择一个操作</h2></div><span id="operation-risk" class="risk-badge">--</span></header>
+            <p id="operation-description" class="operation-description">--</p>
+            <dl id="operation-meta" class="operation-meta"></dl>
+            <form id="operation-form">
+              <div id="operation-fields" class="operation-fields"></div>
+              <section class="input-check-panel" aria-label="提交前检查">
+                <header><span><svg class="icon"><use href="#i-shield"/></svg>提交前检查</span><strong id="input-check-state">等待参数</strong></header>
+                <p id="input-check-message">系统会检查必填项和所需资源；未提交前不会执行任务。</p>
+              </section>
+              <label id="operation-confirm-row" class="confirm-row" hidden><input id="operation-confirm" type="checkbox"><span>我确认此操作会生成新的结果或占用较长计算时间，并接受真实失败结果。</span></label>
+              <div class="operation-actions">
+                <button id="operation-input-check" class="secondary-command" type="button"><svg class="icon"><use href="#i-shield"/></svg>检查输入</button>
+                <button id="operation-run" class="primary-command" type="submit" disabled><svg class="icon"><use href="#i-play"/></svg>提交作业</button>
+                <span id="operation-message" role="status"></span>
+              </div>
+            </form>
+          </section>
+            <aside class="job-monitor" aria-label="任务进度">
+            <header><div><span class="section-label">结果记录</span><h2>已提交的工作</h2></div><button id="jobs-refresh" class="icon-button" type="button" title="刷新任务" aria-label="刷新任务"><svg class="icon"><use href="#i-refresh"/></svg></button></header>
+            <div id="job-list" class="job-list"></div>
+            <section id="job-detail" class="job-detail" hidden>
+              <header><strong id="job-detail-title">--</strong><span id="job-detail-state">--</span></header>
+              <div id="job-detail-meta" class="job-detail-meta"></div>
+              <pre id="job-log" tabindex="0" aria-label="任务执行说明"></pre>
+              <div id="job-artifacts" class="job-artifacts"></div>
+              <div class="job-actions"><button id="job-cancel" class="danger-command" type="button" hidden><svg class="icon"><use href="#i-stop"/></svg>停止</button><button id="job-retry" class="secondary-command" type="button" hidden><svg class="icon"><use href="#i-refresh"/></svg>重试</button></div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section id="view-evidence" class="view secondary-view evidence-view" aria-label="方法与验证">
+        <header class="evidence-heading"><div><span class="kicker">模型说明与测试结果</span><h1>方法验证</h1><p>交互说明电池部件（储能系统）和反作用轮部件（姿态控制执行器）的 PyTorch 预测模型如何处理数据、适配航天工况并输出剩余寿命。页面只展示已通过身份和完整性核验的模型结果；历史结果与当前结果会明确区分，不把不同测试范围混在一起。</p></div><div class="evidence-side"><label class="evidence-sample-control"><span>选择误差样本</span><select id="evidence-sample-select" aria-label="选择用于模型预测误差比较的样本"></select><small id="evidence-sample-detail">只列出具有真实值和实际预测值的样本；缺少的预测路径不会补齐</small></label><div id="evidence-conclusion" class="evidence-conclusion" aria-live="polite"></div></div></header>
+        <div id="method-strip" class="method-strip" aria-label="模型处理流程"></div>
+        <div class="evidence-scroll">
+          <section class="method-map" aria-label="从退化机理到寿命区间的交互说明">
+            <header><div><span class="section-label">模型处理流程</span><h2>从公开退化数据训练，到部件剩余寿命预测</h2></div><span>选择任一阶段查看输入、处理边界与输出</span></header>
+            <div id="method-story" class="method-story">
+              <div class="method-story-rail" role="tablist" aria-label="寿命判断阶段">
+                <button class="is-active" type="button" role="tab" aria-selected="true" data-method-phase="load"><span>01</span><strong>输入要求</strong><small>部件与单位识别</small></button>
+                <button type="button" role="tab" aria-selected="false" data-method-phase="signal"><span>02</span><strong>PyTorch 预训练</strong><small>公开退化数据</small></button>
+                <button type="button" role="tab" aria-selected="false" data-method-phase="adapt"><span>03</span><strong>航天数据适配</strong><small>目标工况数据</small></button>
+                <button type="button" role="tab" aria-selected="false" data-method-phase="interval"><span>04</span><strong>分部件剩余寿命预测</strong><small>电池部件（储能系统） · 反作用轮部件（姿态控制执行器）</small></button>
+              </div>
+              <article id="method-story-focus" class="method-story-focus" aria-live="polite">
+                <span id="method-story-index">部件输入要求</span>
+                <h3 id="method-story-title">先按部件锁定输入、单位与输出边界</h3>
+                <p id="method-story-copy">电池部件（储能系统）与反作用轮部件（姿态控制执行器）使用不同的冻结模型；页面只根据已验证的部件语义分流，不从文件名或数值范围猜测部件。</p>
+                <ul id="method-story-points" class="method-story-points"></ul>
+                <dl id="method-story-facts" class="method-story-facts"></dl>
+                <div class="method-pulse" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              </article>
+            </div>
+          </section>
+          <section class="evaluation-overview" aria-labelledby="evaluation-overview-title">
+            <header><div><span class="section-label">公开验证口径</span><h2 id="evaluation-overview-title">误差、趋势、稳定性与提前性</h2></div><p>每项只读取与其任务、划分和部件范围相符的结构化产物。</p></header>
+            <div id="evaluation-dimension-strip" class="evaluation-dimension-strip" aria-live="polite"></div>
+            <p id="evaluation-scope-boundary" class="evaluation-boundary">本页仅报告项目内当前可读取的结构化验证产物；未纳入验证的数据、场景与部件不在结论范围内，也不能由页面外推。</p>
+          </section>
+          <div id="method-metrics" class="metric-table" aria-label="独立测试指标"></div>
+          <div class="evidence-grid">
+            <section class="evidence-plot-section"><header><div><span class="section-label">样本误差</span><h2>实际模型预测的绝对误差</h2></div><span id="compare-caption">--</span></header><svg id="compare-canvas" role="img" aria-label="同一样本的实际模型预测绝对误差比较"></svg></section>
+            <section id="robustness-section" class="result-record-section"></section><section id="deployment-section" class="result-record-section"></section>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-system" class="view secondary-view system-view" aria-label="数据来源">
+        <header class="source-heading"><div><span class="kicker">数据事实账</span><h1>数据来源</h1><p>追溯数据从哪里来、现在扮演什么角色，以及页面如何区分上传结果和项目内置回放。</p></div><div class="source-controls"><label><span>查看样本</span><select id="source-sample-select" aria-label="选择要追溯的样本"></select></label><button id="source-open-replay" class="utility-button" type="button"><svg class="icon"><use href="#i-orbit"/></svg>在回放中查看</button><p id="system-generated">--</p></div></header>
+        <section class="provenance-stage" aria-label="数据血缘">
+          <div class="provenance-line" aria-hidden="true"><i></i><i></i><i></i></div>
+          <article class="provenance-node upload-node"><span class="node-index">输入</span><svg class="icon"><use href="#i-upload"/></svg><h2>本次上传</h2><p>用户提交的文件只在本次预测中使用。</p><div id="upload-provenance" class="definition-list"><div class="definition-row"><span>状态</span><strong>尚未上传数据</strong></div></div></article>
+          <article class="provenance-node replay-node"><span class="node-index">回放</span><svg class="icon"><use href="#i-database"/></svg><h2>项目内置示例</h2><p>用于只读回放与界面演示，不与上传结果混用。</p><div id="truth-layers" class="definition-list"></div></article>
+          <article class="provenance-node identity-node"><span class="node-index">身份</span><svg class="icon"><use href="#i-layers"/></svg><h2>当前回放样本</h2><p>样本、仿真版本及适用的部件身份均由已登记记录提供。</p><div id="version-detail" class="definition-list"></div></article>
+          <article class="provenance-node integrity-node"><span class="node-index">边界</span><svg class="icon"><use href="#i-shield"/></svg><h2>保留的数据事实</h2><p>字段语义和样本完整性由原始记录约束。</p><div id="integrity-detail" class="definition-list"></div></article>
+        </section>
+        <div id="source-activity" class="source-activity" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <nav class="mobile-nav" aria-label="移动端主视图"><button class="is-active" data-view="predict"><svg class="icon"><use href="#i-upload"/></svg><span>预测</span></button><button data-view="operate"><svg class="icon"><use href="#i-orbit"/></svg><span>示例</span></button><button data-view="workflows"><svg class="icon"><use href="#i-terminal"/></svg><span>任务</span></button><button data-view="evidence"><svg class="icon"><use href="#i-layers"/></svg><span>方法</span></button><button data-view="system"><svg class="icon"><use href="#i-database"/></svg><span>数据</span></button></nav>
+
+    <div id="sample-sheet" class="sheet" hidden><button class="sheet-scrim" aria-label="关闭样本选择"></button><section role="dialog" aria-modal="true" aria-label="选择回放样本"><header><div><span class="section-label">回放工作区</span><strong>切换示例或本次上传结果</strong></div><button id="sheet-close" class="icon-button" type="button" aria-label="关闭"><svg class="icon"><use href="#i-x"/></svg></button></header><div class="sheet-segmented"><button data-sheet-line="bat">电池部件（储能系统）</button><button data-sheet-line="rw">反作用轮部件（姿态控制执行器）</button></div><label class="search-box"><svg class="icon"><use href="#i-search"/></svg><input id="mobile-sample-search" type="search" placeholder="搜索样本"></label><div class="sheet-actions"><button id="mobile-hide-visible-samples" type="button"><svg class="icon"><use href="#i-x"/></svg>清空当前列表</button><button id="mobile-restore-samples" type="button" hidden><svg class="icon"><use href="#i-reset"/></svg>恢复全部样本</button></div><div id="mobile-asset-list" class="asset-list"></div></section></div>
+    <div id="inventory-sheet" hidden></div>
+    <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <footer><span id="discipline-line">原始数据事实优先 · 结论保留来源与适用边界</span><span id="build-line">BRPHM / 湖南大学 · 离线运行</span></footer>
+  </div>
+  <script>__THREE_SCRIPT__</script>
+  <script>__D3_SCRIPT__</script>
+  <script>__GSAP_SCRIPT__</script>
+  <script>window.__LAND_TOPOLOGY__ = __LAND_TOPOLOGY_JSON__;</script>
+  <script>window.__PAYLOAD__ = __PAYLOAD_JSON__; window.__CONTROL__ = __CONTROL_JSON__; window.__OPERATIONS__ = __OPERATIONS_JSON__;</script>
+  <script>__SCRIPT__</script>
+</body>
+</html>
+

@@ -1,0 +1,15 @@
+numpy==1.26.4
+torch==2.2.2; sys_platform == "darwin" and platform_machine == "x86_64"
+torch==2.3.1; sys_platform != "darwin" or platform_machine != "x86_64"
+PyYAML==6.0.3
+tornado==6.5.7
+pandas==2.3.3
+pyarrow==24.0.0
+scipy==1.15.3
+h5py==3.16.0
+openpyxl==3.1.5
+odfpy==1.4.1
+py7zr==0.22.0
+rarfile==4.2
+xlrd==2.0.2
+pyxlsb==1.0.10

@@ -1,0 +1,71 @@
+# configs/preprocess/bat_target.yaml —— 0715-04「仿真→processed 打通」· 蓄电池目标域张量(W2/ALG)
+#
+# 日程原文(0715-04): 仿真→processed 打通 —— sim_loader 输出接 preprocess 同一管线(域=tgt);
+#                    产 {rwa,bat}_target_{train,val}.pt; 归一化统计量只用 tgt 训练集。
+#                    入: sim interim ➜ 出: data/processed/*_target_*.pt。
+#                    验收: 形状/无 NaN; 与公开数据张量结构完全同构。依据 白皮书 §2.2。
+# 规格来源(冲突以 docs/interfaces.md 为准; 人读细则见 docs/interfaces_appendix_0715-04.md, 非判据):
+#   §7.1  .pt 逐键; y_priv 可选**仅 domain=tgt** —— 本卡 priv_channels=[] ⇒ 结构与公开张量完全同构;
+#   §7.2  电池行: L=60 循环 / stride=5 / 通道 bat.capacity_ah/ir_proxy_ohm/temp_mean_c/charge_time_s(4);
+#   §7.4  norm_stats.computed_on.split=="train"(闸二); val/holdout 复用;
+#   §7.5  splits 五列; 仿真样本 strata=DOE 格点 ID; domain=tgt;
+#   §8    封存集隔离(命中 0715-03 holdout_manifest 强制 holdout 不读; 零交集);
+#   附录 0715-04(任务号编号): 0715-04.3 逐 DOE 格点分层尾部法 + 零交集 / 0715-04.6 rul_floor=
+#         drop_negative(SOH 停机尾巴 soh_stop_run=0.795 窗剔除) / 0715-04.7 channels_absent_ok /
+#         0715-04.9 合册+分册双产出 / 0715-04.10 结构同构机器化 / 0715-04.11 Rmax 暂定锚。
+#   **关键(0715-04.7)**: SIM_bat 逐循环重建表(sim_loader.to_battery_cycle_frame, CYCLE_COLS 冻结面)
+#         **无 bat.ir_proxy_ohm 列**(内阻代理), 而 bat 预训练四通道含该列。为与预训练 C 对齐(微调
+#         check_channels 同名平滑), 声明 channels_absent_ok: [bat.ir_proxy_ohm] ⇒ 该列训练集零有限值,
+#         记恒等统计量 {mean:0,std:1,absent:true}、归一后恒 0 插补入账; **若实际有有限值反而硬拒**
+#         (防 sim_loader 增列后声明陈旧)。compute_norm_stats_finite 对「训练集零有限值」通道本硬拒(AH2-5),
+#         channels_absent_ok 是其唯一受理豁免面。
+# 本文件与 preprocess.BAT_TARGET_DEFAULTS 逐字等价(门禁对锁, 照四腿先例)。
+# 运行(仓库根; 真机顺序 = 0714-01 sim_loader → 0715-03 make_holdout → 本管线):
+#   python -m src.datasets.preprocess --config configs/preprocess/bat_target.yaml --workers auto
+
+schema_version: "1.0"
+task: bat_target              # 产物命名种子: norm_stats/bat_target.json / splits/bat_target_split.csv
+dataset_id: SIM_bat           # 单源(§6.7 SIM_bat 卡, domain=tgt; battery_cycle 逐循环重建); data/interim/SIM_bat/
+unit_filter: null
+
+channels:                     # §7.2 电池行四特征(与 bat 预训练 BAT_CHANNELS 同名同序 ⇒ 微调 C 对齐)
+  - bat.capacity_ah
+  - bat.ir_proxy_ohm          # SIM_bat 逐循环表无此列(CYCLE_COLS 冻结) ⇒ 见 channels_absent_ok(0715-04.7)
+  - bat.temp_mean_c
+  - bat.charge_time_s
+
+channels_policy: impute_mean  # AH2-5 同款
+
+channels_absent_ok:           # 0715-04.7: 声明训练集缺席列 ⇒ 恒等统计量(0/1)+归一后 0 插补; 实有值则硬拒
+  - bat.ir_proxy_ohm          #   (仅 resample.mode=none 受理; daily_agg 无「声明缺席」语义)
+
+resample:
+  mode: none                  # battery_cycle: t 本为整循环序(§6.3), 无需重采样
+
+window:
+  L: 60                       # §7.2 电池行字面: 窗 60 循环
+  stride: 5                   # §7.2 电池行字面: 步 5 循环; 窗口不得跨 unit
+
+labels:
+  rmax: 150                   # **暂定锚**(0715-04.11): 承 AH2-6 同值(循环); manifest est_tf 机算 36–320.5 循环。
+                              #   真机按 docs/bat_target_stats.md「训练集寿命分布」回填并重跑(幂等), 回执附录 0715-04。
+  H: 0                        # 预测视野: 目标域微调物料档取 0
+  rul_floor: drop_negative    # 0715-04.6: 窗末 y_rul<0(SOH 停机后尾巴)整窗剔除入账(keep=既有四腿零漂移)
+
+split:
+  policy: cell_tail           # 0715-04.3: 逐 DOE 格点分层 X2-2 尾部法
+  val_frac: 0.2
+  seed: 0
+  holdout_manifest: data/holdout/holdout_manifest.csv  # 0715-03 封存产物(五列冻结); 缺件/空表硬拒; 命中强制 holdout
+  manifest: data/processed/splits/bat_target_split.csv  # §7.5 五列(strata=DOE 格点); 存在即只读 + 逐行对表
+
+priv_channels: []             # §7.1 y_priv 可选键(仅 domain=tgt): 缺省空 ⇒ 结构与公开张量完全同构。
+                              #   T2b 翻列位(如 [bat.soh, bat.lli, bat.lam]): 须全 privileged 可见性、与 channels
+                              #   不相交; 0715-01 官方口径未决, 默认关。
+
+out:
+  pt: data/processed/bat_target.pt                  # 合册(train+val; 0714-06 finetune 单 .pt 双 split「改指」落点)
+  pt_train: data/processed/bat_target_train.pt      # 日程字面产物(§7.1 <task>_<split>.pt)
+  pt_val: data/processed/bat_target_val.pt          # 日程字面产物(= 合册按 split 精确切片; 切片一致性断言)
+  norm_stats: data/processed/norm_stats/bat_target.json  # §7.4 逐键; computed_on.split=train(闸二)
+  stats_doc: docs/bat_target_stats.md               # 逐格点分账/覆盖/Rmax 校准位(**人读回执, 输出非判据**)

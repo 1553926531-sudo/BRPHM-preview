@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+if command -v python >/dev/null 2>&1; then
+    exec python -m brphm "$@"
+fi
+exec python3 -m brphm "$@"
