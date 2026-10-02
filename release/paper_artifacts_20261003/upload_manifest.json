@@ -1,0 +1,31 @@
+{
+  "schema": "brphm-paper-upload-manifest-v1",
+  "generated": "2026-10-03",
+  "repository": "https://github.com/1553926531-sudo/BRPHM-preview",
+  "target_path": "release/paper_artifacts_20261003/",
+  "archives": [
+    {
+      "name": "paper_manuscript_20261003.tar.gz",
+      "bytes": 913979,
+      "sha256": "6e060e4dc56592c8bd44992970c0df1910ce62871b4e20cc030c91f8c2896d73"
+    },
+    {
+      "name": "paper_review_evidence_20261003.tar.gz",
+      "bytes": 640694,
+      "sha256": "3c3db541f23721b100c3a219e28957b341ac4b5f594f8d5ffd9dd5e34def7154"
+    },
+    {
+      "name": "paper_reproduction_20261003.tar.gz",
+      "bytes": 2315852,
+      "sha256": "affe3e7bd7bca0387b3b2ebebf2f8ed0a408272fe207bad3f7fd714e049b65e1"
+    }
+  ],
+  "contents": "isolated paper source, PDF, figures, F1-F10 evidence, reproduction scripts and receipts",
+  "excluded": [
+    "ModelScope data files",
+    "private keys",
+    "tokens",
+    "sealed/A1/B1/canonical/production/competition assets",
+    "Python caches"
+  ]
+}
